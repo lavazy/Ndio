@@ -593,10 +593,12 @@ def order_details(request):
                 unit_number=apartment_number,
                 floor_number=floor_number,
                 block_name=block_name),
-            
             order.save()
 
-            return redirect("payment_view")
+            context = {
+                "product" : product
+            }
+            return redirect("payment_view", context=context)
 
         else:
             print("User Detail Form Errors:", form.errors)

@@ -470,10 +470,78 @@
             padding: 0 1.5rem;
         }
     }
+
+    /* Loading animation/overlay */
+    .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .loading-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .loading-content {
+        text-align: center;
+        color: white;
+    }
+
+    .loading-image {
+        width: 150px;
+        height: auto;
+        margin-bottom: 20px;
+        animation: bounce 1s infinite alternate;
+    }
+
+    .loading-text {
+        margin-top: 20px;
+        font-size: 1.2rem;
+        color: var(--primary-green);
+    }
+
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: var(--primary-orange);
+        animation: spin 1s ease-in-out infinite;
+        margin: 0 auto;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    @keyframes bounce {
+        from { transform: translateY(0); }
+        to { transform: translateY(-20px); }
+    }
     </style>
 </head>
 
 <body>
+    <!-- Loading Animation -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-content">
+            <img src="{% static 'images/char1.png' %}" class="loading-image" alt="Loading...">
+            <div class="spinner"></div>
+            <strong><p class="loading-text">Loading...</p></strong>
+        </div>
+    </div>
+
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
@@ -744,6 +812,37 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvsvOuUIWak9axNX97yBDoa0oKm_f1suY&libraries=places"></script>
 
     <script>
+        // Show loading animation when page is loading
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            
+            // Show loading animation immediately
+            loadingOverlay.classList.add('active');
+            
+            // Hide it when everything is loaded
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    loadingOverlay.classList.remove('active');
+                }, 1000); // 1 second delay to ensure everything is loaded
+            });
+        });
+
+        // Show loading animation when search form is submitted
+        document.getElementById('search-form').addEventListener('submit', function(e) {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            loadingOverlay.classList.add('active');
+            
+            // Hide the loading animation when results are shown
+            // This will be handled by the form submission and page reload
+            // If you're using AJAX, you would hide it in the success callback
+        });
+
+        // capture page unload events
+        window.addEventListener('beforeunload', function() {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            loadingOverlay.classList.add('active');
+        });
+
         // Initialize AOS animations
         AOS.init({
             duration: 800,

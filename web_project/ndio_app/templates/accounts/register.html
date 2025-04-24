@@ -183,9 +183,77 @@
                 padding: 20px;
             }
         }
+
+        /* Loading animation/overlay */
+        .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .loading-image {
+            width: 150px;
+            height: auto;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite alternate;
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: var(--primary-green);
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-orange);
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-20px); }
+        }
     </style>
 </head>
 <body>
+    <!-- Loading Animation -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-content">
+            <img src="{% static 'images/char1.png' %}" class="loading-image" alt="Loading...">
+            <div class="spinner"></div>
+            <strong><p class="loading-text">Loading...</p></strong>
+        </div>
+    </div>
+
     <div class="container my-5">
         <div class="register-container">
             <div class="register-header">
@@ -245,7 +313,7 @@
                             <div class="form-check mb-4">
                                 <input class="form-check-input" type="checkbox" id="termsCheck" required>
                                 <label class="form-check-label" for="termsCheck">
-                                    I agree to the <a href="#" style="color: var(--primary-orange);">Terms of Service</a> and <a href="#" style="color: var(--primary-orange);">Privacy Policy</a>
+                                    I agree to the <a href="#" style="color: var(--primary-orange);">Terms of Service</a> and <a href="/privacy_policy" style="color: var(--primary-orange);">Privacy Policy</a>
                                 </label>
                             </div>
                             
@@ -281,7 +349,7 @@
                                     <i class="bi bi-lightning-charge"></i>
                                     <div>
                                         <h6 class="mb-0">Blazing Fast Speeds</h6>
-                                        <small>Enjoy our premium 100Mbps fibre connections</small>
+                                        <small>Enjoy our premium fibre connections</small>
                                     </div>
                                 </li>
                                 <li>
@@ -316,7 +384,7 @@
                             
                             <div class="mt-4 p-3" style="background-color: white; border-radius: 6px; border-left: 4px solid var(--primary-orange);">
                                 <h6><i class="bi bi-shield-check me-2" style="color: var(--primary-orange);"></i> SECURE REGISTRATION</h6>
-                                <small class="text-muted">Your information is protected with 256-bit SSL encryption and will never be shared with third parties.</small>
+                                <small class="text-muted">Your data is secured with 256-bit SSL encryption. We do not share your information with third parties except when required by law or to provide our services.</small>
                             </div>
                         </div>
                     </div>
@@ -336,7 +404,7 @@
                     <p class="mb-0">&copy; 2024 NDIO Telecoms. All rights reserved.</p>
                     <div class="mt-2">
                         <a href="#" class="text-white me-3">Terms</a>
-                        <a href="#" class="text-white me-3">Privacy</a>
+                        <a href="{% url 'privacy_policy' %}" class="text-white me-3">Privacy</a>
                         <a href="#" class="text-white">Contact</a>
                     </div>
                 </div>
@@ -349,6 +417,27 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // Show loading animation when page is loading
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            
+            // Show loading animation immediately
+            loadingOverlay.classList.add('active');
+            
+            // Hide it when everything is loaded
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    loadingOverlay.classList.remove('active');
+                }, 1000); // 1 second delay to ensure everything is loaded
+            });
+        });
+
+        // capture page unload events
+        window.addEventListener('beforeunload', function() {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            loadingOverlay.classList.add('active');
+        });
+
         $(document).ready(function() {
             // Password strength indicator
             $('#id_password1').on('input', function() {
