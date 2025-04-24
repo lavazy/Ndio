@@ -10,7 +10,6 @@ from .forms import CustomUserCreationForm, PaymentForm, UserDetailForm, OrderFor
 from . import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
 import requests
 
 
