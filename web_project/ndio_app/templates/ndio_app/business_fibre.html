@@ -1,0 +1,765 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">  
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <title>{% block title%}NDIO | Business{% endblock %}</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+    :root {
+        --primary-green: #2ecc71;
+        --dark-green: #27ae60;
+        --light-green: #d5f5e3;
+        --primary-orange: #e67e22;
+        --dark-orange: #d35400;
+        --black: #2c3e50;
+        --dark-black: #1a252f;
+        --white: #ffffff;
+        --light-gray: #ecf0f1;
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+        --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+        --shadow-lg: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        color: var(--black);
+        overflow-x: hidden;
+        background-color: var(--white);
+    }
+
+    /* Navbar Styles */
+    .navbar {
+        background-color: var(--dark-green);
+        box-shadow: var(--shadow-md);
+        padding: 0.8rem 2rem;
+        position: sticky;
+        top: 0;
+        z-index: 1030;
+        transition: var(--transition);
+    }
+
+    .navbar.scrolled {
+        background-color: var(--dark-black);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    .navbar-brand img {
+        transition: var(--transition);
+        height: 50px;
+        width: auto;
+    }
+
+    .navbar-brand img:hover {
+        transform: scale(1.05);
+    }
+
+    .nav-link {
+        color: rgba(255,255,255,0.9) !important;
+        font-weight: 500;
+        padding: 0.5rem 1rem !important;
+        margin: 0 0.25rem;
+        border-radius: 6px;
+        transition: var(--transition);
+        position: relative;
+    }
+
+    .nav-link:hover, .nav-link.active {
+        color: var(--white) !important;
+        background: rgba(255,255,255,0.15);
+    }
+
+    .nav-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 6px;
+        height: 6px;
+        background: var(--primary-orange);
+        border-radius: 50%;
+    }
+
+    .nav-link i {
+        font-size: 1.1rem;
+        margin-right: 6px;
+    }
+
+    .dropdown-menu {
+        border: none;
+        box-shadow: var(--shadow-lg);
+        border-radius: 8px;
+        padding: 0.5rem 0;
+        background-color: var(--black);
+    }
+
+    .dropdown-item {
+        color: var(--white);
+        padding: 0.5rem 1.5rem;
+        transition: var(--transition);
+    }
+
+    .dropdown-item:hover {
+        background-color: var(--primary-orange);
+        color: var(--white);
+    }
+
+    /* Hero Section */
+    .hero {
+        position: relative;
+        height: 80vh;
+        min-height: 600px;
+        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url("{% static 'images/background.png' %}");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        display: flex;
+        align-items: center;
+        color: var(--white);
+        overflow: hidden;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 0 2rem;
+    }
+
+    .search-bar {
+        width: 100%;
+        max-width: 700px;
+        margin: 2rem auto 0;
+    }
+
+    .search-input {
+        border-radius: 50px !important;
+        padding: 1.25rem 1.5rem;
+        border: none;
+        box-shadow: var(--shadow-md);
+    }
+
+    .search-btn {
+        border-radius: 50px !important;
+        padding: 0 2rem;
+        background-color: var(--primary-orange);
+        border: none;
+        font-weight: 500;
+        transition: var(--transition);
+    }
+
+    .search-btn:hover {
+        background-color: var(--dark-orange);
+        transform: translateY(-2px);
+    }
+
+    /* Intro Section */
+    .intro-section {
+        background-color: var(--black);
+        color: var(--white);
+        padding: 5rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .headline {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 4.5rem;
+        font-weight: 800;
+        color: var(--primary-orange);
+        text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+        line-height: 1.1;
+        margin-bottom: 1rem;
+    }
+
+    .slogan {
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--primary-green);
+        margin-bottom: 1.5rem;
+    }
+
+    .promo {
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: var(--white);
+        background-color: var(--primary-orange);
+        display: inline-block;
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+    }
+
+    /* Services Section */
+    .services-section {
+        background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+        padding: 5rem 0;
+        color: var(--white);
+    }
+
+    .service-heading {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 3.5rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 5px;
+        position: relative;
+        display: inline-block;
+        margin-bottom: 3rem;
+    }
+
+    .service-heading::after {
+        content: '';
+        position: absolute;
+        bottom: -15px;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background-color: var(--primary-orange);
+        border-radius: 2px;
+    }
+
+    .service-text {
+        font-size: 1.2rem;
+        line-height: 1.7;
+        max-width: 800px;
+        margin: 0 auto 3rem;
+    }
+
+    /* Products Section */
+    .products-section {
+        background-color: var(--light-gray);
+        padding: 5rem 0;
+    }
+
+    .section-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--black);
+        margin-bottom: 3rem;
+        position: relative;
+        display: inline-block;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 50%;
+        height: 4px;
+        background-color: var(--primary-orange);
+        border-radius: 2px;
+    }
+
+    /* Footer */
+    .footer {
+        background-color: var(--dark-black);
+        color: var(--white);
+        padding: 4rem 0 2rem;
+    }
+
+    .footer-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: var(--primary-green);
+    }
+
+    .footer-logo {
+        max-width: 200px;
+        margin-bottom: 1.5rem;
+    }
+
+    .footer-links {
+        list-style: none;
+        padding: 0;
+    }
+
+    .footer-links li {
+        margin-bottom: 0.75rem;
+    }
+
+    .footer-links a {
+        color: var(--light-gray);
+        text-decoration: none;
+        transition: var(--transition);
+    }
+
+    .footer-links a:hover {
+        color: var(--primary-orange);
+        padding-left: 5px;
+    }
+
+    .social-icons {
+        margin-top: 1.5rem;
+    }
+
+    .social-icons a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background-color: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        margin-right: 10px;
+        color: var(--white);
+        transition: var(--transition);
+    }
+
+    .social-icons a:hover {
+        background-color: var(--primary-orange);
+        transform: translateY(-3px);
+    }
+
+    .copyright {
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding-top: 2rem;
+        margin-top: 3rem;
+        font-size: 0.9rem;
+        color: rgba(255,255,255,0.7);
+    }
+
+    /* Back to Top Button */
+    .back-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background-color: var(--primary-orange);
+        color: var(--white);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        z-index: 99;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: var(--transition);
+        box-shadow: var(--shadow-md);
+    }
+
+    .back-to-top.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .back-to-top:hover {
+        background-color: var(--dark-orange);
+        transform: translateY(-3px);
+    }
+
+    /* Animations */
+    [data-aos="fade-up"] {
+        transform: translateY(30px);
+        opacity: 0;
+        transition-property: transform, opacity;
+    }
+
+    [data-aos="fade-up"].aos-animate {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 991.98px) {
+        .headline {
+            font-size: 3.5rem;
+        }
+        
+        .slogan {
+            font-size: 1.5rem;
+        }
+        
+        .service-heading {
+            font-size: 2.5rem;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .navbar {
+            padding: 0.8rem 1rem;
+        }
+        
+        .headline {
+            font-size: 2.5rem;
+        }
+        
+        .hero {
+            height: 70vh;
+            min-height: 500px;
+        }
+        
+        .service-heading {
+            font-size: 2rem;
+            letter-spacing: 3px;
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        .headline {
+            font-size: 2rem;
+        }
+        
+        .slogan {
+            font-size: 1.25rem;
+        }
+        
+        .promo {
+            font-size: 1.1rem;
+        }
+        
+        .search-input {
+            padding: 1rem;
+        }
+        
+        .search-btn {
+            padding: 0 1.5rem;
+        }
+    }
+    </style>
+</head>
+
+<body>
+    <!-- Hero Section -->
+    <section class="hero" id="search_section">
+        <div class="container hero-content text-center">
+            <a href="{% url 'home' %}" class="btn btn-outline-light mb-3">
+                <i class="bi bi-arrow-left-circle"></i> Back to Homepage
+            </a><br><br>
+            <div data-aos="fade-up" data-aos-duration="1000">
+                <h1 class="display-4 fw-bold mb-4">Business Fibre</h1>
+                <p class="lead mb-5">Experience the future of connectivity with NDIO's ultra-fast fibre networks</p>
+                
+                <form class="search-bar" role="search" id="search-form" method="POST" action="{% url 'business_fibre' %}">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input class="form-control search-input" type="search" id="address" name="address" placeholder="Enter your address to check coverage" required>
+                        <button class="btn search-btn" type="submit">Search</button>
+                    </div>
+                    <!-- Map Information for rendering -->
+                    <div id="map" style="display: none;"></div>
+                    <input type="hidden" id="strBBox" name="strBBox">
+                    <input type="hidden" id="strWidth" name="strWidth">
+                    <input type="hidden" id="strHeight" name="strHeight">
+                    <input type="hidden" id="strICoOrdinate" name="strICoOrdinate">
+                    <input type="hidden" id="strJCoOrdinate" name="strJCoOrdinate">
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="results" class="py-5 bg-light" {% if not address %}style="display: none;"{% endif %}>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h3 class="mb-4">Results for <span class="text-primary">{{ address }}</span></h3>
+                    
+                    {% if fibre_is_available == True %}
+                        <div class="card border-0 shadow-sm mb-4" data-aos="fade-up">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
+                                            <i class="bi bi-lightning-charge-fill text-success fs-3"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-0">Business Fibre Internet</h5>
+                                            <p class="mb-0 text-success">Available in your area</p>
+                                        </div>
+                                    </div>
+                                    <a href="#available_products" class="btn btn-success px-4" id="fibre_link">View Packages</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="card border-0 shadow-sm mb-4" data-aos="fade-up">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-danger bg-opacity-10 p-3 rounded-circle me-3">
+                                            <i class="bi bi-lightning-charge-fill text-danger fs-3"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-0">Business Fibre Internet</h5>
+                                            <p class="mb-0 text-danger">Not currently available</p>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-outline-secondary px-4" disabled>Unavailable</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card border-0 shadow-sm mb-4" data-aos="fade-up">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-danger bg-opacity-10 p-3 rounded-circle me-3">
+                                            <i class="bi bi-lightning-charge-fill text-danger fs-3"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-0">Wireless Internet</h5>
+                                            <p class="mb-0 text-success">Available in your area</p>
+                                        </div>
+                                    </div>
+                                    <a href="{% url 'wireless' %}" class="btn btn-success px-4" id="fibre_link">Get Wireless internet</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Intro Section -->
+    <section class="intro-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-2 text-center mb-4 mb-lg-0" data-aos="fade-right">
+                    <img src="{% static 'images/char1.png' %}" class="img-fluid" style="max-height: 250px;">
+                </div>
+                <div class="col-lg-8" data-aos="fade-up">
+                    <h1 class="headline">NDIO!!</h1>
+                    <h3 class="slogan">FAST, FASTER, FASTEST</h3>
+                    <h3 class="slogan">INTERNET</h3>
+                    <a href="#search_section"><h4 class="promo">SAY YES TO US</h4></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services-section">
+        <div class="row container text-center">
+            <div class="col-md-8 justify-content-center">
+                <h2 class="service-heading" data-aos="fade-up">FAST FIBRE</h2>
+                <p class="service-text" data-aos="fade-up" data-aos-delay="100">
+                    Experiencess the power of our lightning-fast fibre network with speeds that will transform how you work and play online.
+                    Say goodbye to buffering and lag! Our reliable fibre technology delivers symmetrical speeds,
+                    ensuring seamless streaming, gaming, video calls, and large file transfers without interruptions.
+                </p>
+                <a href="#search_section"><p class="service-text promo" data-aos="fade-up" data-aos-delay="100">Check coverage</p></a>
+            </div>
+            <div class="col-md-2 justify-content-center">
+                <img src="{% static 'images/char2_2.png' %}" class="img-fluid" style="max-height: 300px;">
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
+                    <div class="row">
+                        <div class="col-md-12 ">
+                        <br><br><br><br><br><br>
+                            <h2 class="service-heading text-center">OUR PACKAGES</h2>
+                            <p class="service-text">
+                                Upgrade to Lightning-Fast Fibre—Explore Our Best Deals Now!
+                            </p>
+                        </div>
+                        <!-- <div class="col-md-6">
+                            <img src="{% static 'images/char2_2.png' %}" class="img-fluid" style="max-height: 300px;">
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="available_products" class="products-section">
+        <h2 class="section-title text-center mb-5" data-aos="fade-up">Available Packages</h2>
+        <div class="container" id="">
+            <div class="row">
+                {% for item in products %}
+                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:1 }}00">
+                    <div class="product-card">
+                        <div class="bg-primary-green bg-opacity-10 p-3 rounded-circle d-inline-block mb-3">
+                            <i class="bi bi-lightning-charge-fill text-primary-green fs-3"></i>
+                        </div>
+                        <h4>{{ item.strName }}</h4>
+                        <p class="text-muted mb-2">Speed: {{ item.guidProductId }} Mbps</p>
+                        <p class="h5 text-primary-orange mb-4">R650/month</p>
+                        <a id="{{ item.guidProductId }}" href="{% url 'register_view' %}?product_id={{ item.guidProductId }}" class="btn">Order Now</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <img src="{% static 'images/ndio_logo.png' %}" alt="NDIO Logo" class="footer-logo">
+                    <p class="text-light">Providing cutting-edge internet solutions to power your digital life.</p>
+                </div>
+                
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <h5 class="footer-title">Contact Us</h5>
+                    <ul class="footer-links">
+                        <li><i class="bi bi-telephone me-2"></i> +27 87 152 3643</li>
+                        <li><i class="bi bi-envelope me-2"></i> info@ndio.co.za</li>
+                        <li><i class="bi bi-geo-alt me-2"></i> 16 Orange Street Gardens, Cape Town</li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 mb-5 mb-lg-0">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/packages">Packages</a></li>
+                        <li><a href="/faqs">FAQs</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2">
+                    <h5 class="footer-title">Follow Us</h5>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/" target="blank"><i class="bi bi-facebook"></i></a>
+                        <a href="https://x.com/" target="blank"><i class="bi bi-twitter-x"></i></a>
+                        <a href="https://www.instagram.com/" target="blank"><i class="bi bi-instagram"></i></a>
+                        <a href="https://www.linkedin.com/" target="blank"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright text-center">
+                <p class="mb-0">&copy; 2024 NDIO. All rights reserved. | <a href="/privacy-policy" class="text-light">Privacy Policy</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top">
+        <i class="bi bi-chevron-up"></i>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvsvOuUIWak9axNX97yBDoa0oKm_f1suY&libraries=places"></script>
+
+    <script>
+        // Initialize AOS animations
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        // Initialize Google Maps Autocomplete
+        let autocomplete;
+        function initializeAutocomplete() {
+            const input = document.getElementById("address");
+            const options = {
+                componentRestrictions: { country: 'za' } // 'za' is the country code for South Africa
+            };                                          // Restricred to South African addresses only
+            autocomplete = new google.maps.places.Autocomplete(input, options);
+        }
+        google.maps.event.addDomListener(window, "load", initializeAutocomplete);
+
+        // Initialize Leaflet map
+        var map = L.map('map').setView([{{ latitude }}, {{ longitude }}], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        map.on("moveend", function () {
+            var bounds = map.getBounds();
+            document.getElementById("strBBox").value = bounds.toBBoxString();
+            document.getElementById("strWidth").value = map.getSize().x;
+            var center = map.getCenter();
+            document.getElementById("strICoOrdinate").value = center.lat;
+            document.getElementById("strJCoOrdinate").value = center.lng;
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                document.querySelector('.navbar').classList.add('scrolled');
+            } else {
+                document.querySelector('.navbar').classList.remove('scrolled');
+            }
+        });
+
+        // Back to top button
+        const backToTopButton = document.querySelector('.back-to-top');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) {
+                backToTopButton.classList.add('active');
+            } else {
+                backToTopButton.classList.remove('active');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Enhanced fibre_link handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const fibreLink = document.getElementById('fibre_link');
+            
+            if (fibreLink) {
+                fibreLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Get the products section
+                    const productsSection = document.getElementById('available_products');
+                    
+                    if (productsSection) {
+                        // Show the section first
+                        productsSection.style.display = 'block';
+                        
+                        // Force a reflow to ensure the display change takes effect
+                        void productsSection.offsetHeight;
+                        
+                        // Smooth scroll to it
+                        productsSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                        
+                        // Add a slight delay to ensure smoothness
+                        setTimeout(() => {
+                            productsSection.focus(); // For accessibility
+                        }, 100);
+                    }
+                });
+            }
+        });
+
+        // Show results section if address exists
+        {% if address %}
+            document.getElementById('results').style.display = 'block';
+        {% endif %}
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+    <div class="row text-center">
+    {% if results %}
+      <h2>Results for {{ address }}</h2>
+      <div class="col-md-4">
+        <div class="card" style="width: 14rem;">
+          <div class="card-body bg-danger text-white">
+          <p class="h2">FIBRE</p>
+      {{results.fibre.strMessage}}
+          </div>
+        </div>
+      </div> 
+      <div class="col-md-4">
+        <div class="card" style="width: 14rem;">
+          <div class="card-body bg-warning text-white">
+          <p class="h2">MTN LTE</p>
+          {{results.fibre.strMessage}}
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card" style="width: 14rem;">
+          <div class="card-body bg-info text-white">
+          <p class="h2">TELKOM LTE</p>
+          {{results.fibre.strMessage}}
+          </div>
+        </div>
+      </div>
+    {% elif error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    </div>
+
+
+
+
+## Displaying message on display
+def get_network_providers():
+    session_id = get_session()
+    url = f"https://apitest.axxess.co.za/calls/rsapi/getNetworkProviders.json?strUserName=KAB149&strPassword=cW3j*-NUmKG~$5!&{session_id}"
+    params = {"strSessionId": session_id}
+    username = "ResellerAdmin"
+    password = "jFbd5lg7Djfbn48idmlf4Kd"
+
+    response = requests.get(url, params=params, auth=(username, password))
+    #network_provider_name = response.json()["strName"]
+    #network_provider_id = response.json()["guidNetworkProviderId"]
+    print(response.json())
+    #return network_provider_name, network_provider_id
+
+get_network_providers()
+
+
+
+
+{% with mtn_products.0 as first_item %}
+<div class="product-card">
+    <div class="product-header">{{first_item.strName}}</div>
+
+
+
+
+
+
+def get_products():
+    """ This functtion returns the products being sold.""" 
+    session_id = get_session()
+    url = "https://apitest.axxess.co.za/calls/rsapi/getProducts.json?strUserName=KAB149&strPassword=cW3j*-NUmKG~$5!&"
+    headers = {"Content-Type": "application/json"}
+    params = {"strSessionId": session_id}                                                                                                                          
+    username = "ResellerAdmin"
+    password = "jFbd5lg7Djfbn48idmlf4Kd"
+
+    response = requests.get(url, auth=(username, password) ,headers=headers, params=params)
+
+    if response.status_code == 200:
+        products = response.json().get("arrProducts", [])
+        return products
+    else:
+        print(f"Error {response.status_code}")
+        print(f"Message: {response.json().get('strMessage')}")
+        return []
+
+
+1. Register/Login
+2. Complete Order
+3. Complete
+
+
+public key: pk_test_95a46073bZzMMRy30254
+secret key: sk_test_b046039cNmAYYrp67b64f42ad0bb
+
+
+
+
+
+if request.method == "POST":
+payment_token = request.POST.get('paymentToken')
+amount = request.POST.get('amount')
+name = request.POST.get('name')
+
+if not payment_token or not amount or not name:
+    return JsonResponse({'error': 'Missing required fields.'}, status=400)
+
+secret_key = settings.YOCO_PUBLIC_KEY
+url = 'https://online.yoco.com/v1/charges/'
+
+headers = {
+    'Authorization': f'Bearer {secret_key}',
+    'Content-Type': 'application/json'
+}
+
+data = {
+    'token': payment_token,
+    'amountInCents': int(amount),
+    'currency': 'ZAR'
+}
+
+response = requests.post(url, json=data, headers=headers)
+response_data = response.json()
+
+if response.status_code == 201:
+    # Save payment information to the database
+    Payment.objects.create(
+        name=name,
+        amount=int(amount),
+        payment_id=response_data['id']
+    )
+    return JsonResponse({'message': 'Payment successful!'}, status=200)
+else:
+    return JsonResponse({'error': response_data.get('message', 'Payment failed.')}, status=400)
+
+return JsonResponse({'error': 'Invalid request method.'}, status=405)

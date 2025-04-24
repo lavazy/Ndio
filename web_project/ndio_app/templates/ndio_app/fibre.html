@@ -1,0 +1,299 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">  
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <title>NDIO | Home-Fibre</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    
+    <style>
+    :root {
+        --primary-green: #2ecc71;
+        --dark-green: #27ae60;
+        --light-green: #d5f5e3;
+        --primary-orange: #e67e22;
+        --dark-orange: #d35400;
+        --black: #2c3e50;
+        --dark-black: #1a252f;
+        --white: #ffffff;
+        --light-gray: #ecf0f1;
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+        --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+        --shadow-lg: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        color: var(--black);
+        overflow-x: hidden;
+        background-color: var(--white);
+    }
+
+    /* Hero Section */
+    .hero {
+        position: relative;
+        height: 40vh;
+        min-height: 300px;
+        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("{% static 'images/background.png' %}");
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        color: var(--white);
+        overflow: hidden;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 0 2rem;
+    }
+
+    .scroll-container {
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .glass-card {
+        width: 280px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        scroll-snap-align: start;
+        transition: transform 0.3s ease;
+    }
+
+    .glass-card:hover {
+        transform: scale(1.05);
+    }
+
+    .text-gradient {
+        background: linear-gradient(to right, #00f2fe, #4facfe);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Footer */
+    .footer {
+        background-color: var(--dark-black);
+        color: var(--white);
+        padding: 4rem 0 2rem;
+    }
+
+    .footer-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: var(--primary-green);
+    }
+
+    .footer-logo {
+        max-width: 200px;
+        margin-bottom: 1.5rem;
+    }
+
+    .footer-links {
+        list-style: none;
+        padding: 0;
+    }
+
+    .footer-links li {
+        margin-bottom: 0.75rem;
+    }
+
+    .footer-links a {
+        color: var(--light-gray);
+        text-decoration: none;
+        transition: var(--transition);
+    }
+
+    .footer-links a:hover {
+        color: var(--primary-orange);
+        padding-left: 5px;
+    }
+
+    .social-icons {
+        margin-top: 1.5rem;
+    }
+
+    .social-icons a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background-color: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        margin-right: 10px;
+        color: var(--white);
+        transition: var(--transition);
+    }
+
+    .social-icons a:hover {
+        background-color: var(--primary-orange);
+        transform: translateY(-3px);
+    }
+
+    .copyright {
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding-top: 2rem;
+        margin-top: 3rem;
+        font-size: 0.9rem;
+        color: rgba(255,255,255,0.7);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 767.98px) {
+        .hero {
+            height: 30vh;
+            min-height: 250px;
+        }
+        
+        .steps-section {
+            padding: 3rem 0;
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        .step-title {
+            font-size: 1.25rem;
+        }
+    }
+    </style>
+</head>
+
+<body>
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container hero-content text-center">
+        <a href="{% url 'home' %}" class="btn btn-outline-light mb-3">
+            <i class="bi bi-arrow-left-circle"></i> Back to Homepage
+        </a>
+        <h1 class="display-4 fw-bold mb-4">Experience NDIO Home-Fibre</h1>
+        <p class="lead mb-5">Reliable. Lightning-Fast. Designed for Every African Home.</p>
+    </div>
+</section>
+
+<!-- Home Fibre Feature Section -->
+<section class="py-5 bg-light text-dark">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="fw-bold display-5">Why NDIO Home Fibre?</h2>
+        <p class="text-muted">Experience digital living without limits — designed for your home, your family, and your future.</p>
+      </div>
+  
+      <!-- Feature 1 -->
+      <div class="row align-items-center mb-5">
+        <div class="col-md-2">
+            <img src="{% static 'images/zoom.jpeg' %}" alt="zoom Logo" class="footer-logo" width="100" height="100">
+        </div>
+        <div class="col-md-2">
+            <img src="{% static 'images/netflix_logo.jpeg' %}" alt="Netflix Logo" class="footer-logo" width="100" height="100">
+        </div>
+        <div class="col-md-2">
+            <img src="{% static 'images/skype_logo.jpeg' %}" alt="skype Logo" class="footer-logo" width="100" height="100">
+        </div>
+        <div class="col-md-6">
+          <h4 class="fw-bold">Unmatched Speed & Reliability</h4>
+          <p class="text-muted">From Zoom calls to Netflix marathons, NDIO's fibre delivers blazing-fast, stable internet that keeps the whole household connected without lag.</p>
+        </div>
+      </div>
+  
+      <!-- Feature 2 -->
+      <div class="row align-items-center mb-5 flex-md-row-reverse">
+        <div class="col-md-2">
+          <img src="{% static 'images/youtube_logo.jpeg' %}" alt="youtube logo" class="img-fluid rounded-4 shadow">
+        </div>
+        <div class="col-md-2">
+            <img src="{% static 'images/teams_logo.jpeg' %}" alt="teams logo" class="img-fluid rounded-4 shadow">
+        </div>
+        <div class="col-md-2">
+            <img src="{% static 'images/gaming.jpeg' %}" alt="twitch logo" class="img-fluid rounded-4 shadow">
+        </div>
+        <div class="col-md-6">
+          <h4 class="fw-bold">No Buffering, No Waiting</h4>
+          <p class="text-muted">Stream, browse, game, and video call — all at the same time. NDIO's fibre network ensures seamless performance for every corner of your home.</p>
+        </div>
+      </div>
+   
+      <!-- Feature 4 -->
+      <div class="row align-items-center mb-5 flex-md-row-reverse">
+        <div class="col-md-6">
+          <img src="{% static 'images/support.jpeg' %}" alt="Local Support" class="rounded-4 shadow" width="600" height="600">
+        </div>
+        <div class="col-md-6">
+          <h4 class="fw-bold">Friendly, Local Support</h4>
+          <p class="text-muted">Need help? We’re just around the corner. NDIO’s support team offers fast, friendly service from people who truly understand your community’s needs.</p>
+        </div>
+      </div>
+  
+      <!-- Final Call to Action -->
+      <div class="text-center mt-5">
+        <h5 class="fw-semibold mb-3">Why settle for slow? Step into the fast lane of digital life.</h5>
+        <a href="/home" class="btn btn-lg rounded-pill px-4">Get NDIO Home Fibre</a>
+      </div>
+    </div>
+  </section>
+  
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <img src="{% static 'images/ndio_logo.png' %}" alt="NDIO Logo" class="footer-logo">
+                    <p class="text-light">Providing cutting-edge internet solutions to power your digital life.</p>
+                </div>
+                
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <h5 class="footer-title">Contact Us</h5>
+                    <ul class="footer-links">
+                        <li><i class="bi bi-telephone me-2"></i> +27 87 152 3643</li>
+                        <li><i class="bi bi-envelope me-2"></i> info@ndio.co.za</li>
+                        <li><i class="bi bi-geo-alt me-2"></i> 16 Orange Street Gardens, Cape Town</li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 mb-5 mb-lg-0">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="/home">Home</a></li>
+                        <li><a href="/about">About Us</a></li>
+                        <li><a href="/packages">Packages</a></li>
+                        <li><a href="/faqs">FAQs</a></li>
+                    </ul>                    
+                </div>
+                
+                <div class="col-lg-2">
+                    <h5 class="footer-title">Follow Us</h5>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/" target="blank"><i class="bi bi-facebook"></i></a>
+                        <a href="https://x.com/" target="blank"><i class="bi bi-twitter-x"></i></a>
+                        <a href="https://www.instagram.com/" target="blank"><i class="bi bi-instagram"></i></a>
+                        <a href="https://www.linkedin.com/" target="blank"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright text-center">
+                <p class="mb-0">&copy; 2024 NDIO. All rights reserved. | <a href="/privacy-policy" class="text-light">Privacy Policy</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

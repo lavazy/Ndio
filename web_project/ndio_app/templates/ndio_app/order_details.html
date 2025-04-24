@@ -1,0 +1,568 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NDIO | Complete Your Order</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #4caf50;
+            --dark-green: #1b5e20;
+            --primary-orange: #ff6d00;
+            --light-orange: #ff9100;
+            --dark-orange: #e65100;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        .navbar {
+            background: #212529 !important;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        
+        .order-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        }
+        
+        .order-header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .order-header h2 {
+            font-weight: 700;
+            margin-bottom: 0;
+        }
+        
+        .order-body {
+            background: white;
+            padding: 30px;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-section h4 {
+            color: var(--primary-green);
+            margin-bottom: 20px;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .form-section h4::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary-orange);
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        .form-control {
+            padding: 12px 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 0.25rem rgba(46, 125, 50, 0.25);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-orange);
+            border-color: var(--primary-orange);
+            padding: 12px 25px;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--dark-orange);
+            border-color: var(--dark-orange);
+            transform: translateY(-2px);
+        }
+        
+        .package-card {
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .package-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .package-header {
+            background: var(--primary-green);
+            color: white;
+            padding: 15px;
+            font-weight: 600;
+        }
+        
+        .package-body {
+            padding: 20px;
+        }
+        
+        .package-features {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .package-features li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #eee;
+            display: flex;
+            align-items: center;
+        }
+        
+        .package-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .package-features i {
+            color: var(--primary-green);
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .package-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-orange);
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .legal-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        
+        .legal-section h5 {
+            color: var(--primary-green);
+            margin-bottom: 15px;
+        }
+        
+        .terms-checkbox {
+            margin-top: 20px;
+        }
+        
+        .terms-checkbox label {
+            margin-left: 10px;
+            font-weight: 500;
+        }
+        
+        .hidden-fields {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .order-summary {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 20px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .summary-total {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--primary-orange);
+        }
+        
+        @media (max-width: 768px) {
+            .order-container {
+                margin: 15px;
+            }
+            
+            .order-body {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="{% static 'images/ndio_logo1.png' %}" width="180" height="80" alt="NDIO Logo" class="img-fluid">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'home' %}"><i class="bi bi-box-arrow-left me-1"></i> Logout</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="order-container">
+            <div class="order-header">
+                <h2><i class="bi bi-cart-check me-2"></i> COMPLETE YOUR ORDER</h2>
+            </div>
+            
+            <div class="order-body">
+                <div class="row">
+                    <!-- Left Column - Form -->
+                    <div class="col-lg-8">
+                        <div class="alert alert-success">
+                            <i class="bi bi-check-circle-fill me-2"></i> You're almost done! Just fill in your details to complete your order.
+                        </div>
+                        
+                        <form id="orderForm" action="{% url 'order_details' %}" method="POST">
+                            {% csrf_token %}
+                            
+                            <!-- Personal Details Section -->
+                            <div class="form-section">
+                                <h4><i class="bi bi-person-circle me-2"></i> PERSONAL DETAILS</h4>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">{{ form.first_name.label }}:</label>
+                                        <p>{{ form.first_name }}</p>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">{{ form.last_name.label }}:</label>
+                                        <p>{{ form.last_name }}</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">{{ form.phone_number.label }}:</label>
+                                        <p>{{ form.phone_number }}</p>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Passport/{{ form.id_number.label }}:</label>
+                                        <p>{{ form.id_number }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Address Details Section -->
+                            <div class="form-section">
+                                <h4><i class="bi bi-house-door me-2"></i> ADDRESS DETAILS</h4>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Address Type:</label>
+                                        <p>{{ form_order.address_type }}</p>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Address:</label>
+                                        <p>{{ form_order.address }}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Province:</label>
+                                        <p>{{ form_order.province }}</p>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Suburb:</label>
+                                        <p>{{ form_order.suburb }}</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Estate Fields (Hidden by Default) -->
+                                <div class="row hidden-fields" id="estate_fields">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Estate Name:</label>
+                                        <p>{{ form_order.estate_name }}</p>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Address inside Estate:</label>
+                                        <p>{{ form_order.estate_address }}</p>
+                                    </div>
+                                </div>
+                                                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">City:</label>
+                                        <p>{{ form_order.city }}</p>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Postal Code:</label>
+                                        <p>{{ form_order.postal_code }}</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Apartment Fields (Hidden by Default) -->
+                                <div class="row hidden-fields" id="apartment_fields">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Apartment Name:</label>
+                                        <p>{{ form_order.apartment_name }}</p>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Floor:</label>
+                                        <p>{{ form_order.apartment_floor }}</p>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Apartment Unit:</label>
+                                        <p>{{ form_order.apartment_unit }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            
+                            <!-- Package Information -->
+                            <div class="form-section">
+                                <h4><i class="bi bi-box-seam me-2"></i> YOUR PACKAGE</h4>
+                                <div class="package-card">
+                                    <div class="package-header">
+                                        HOME FIBRE 100MBPS
+                                    </div>
+                                    <div class="package-body">
+                                        <ul class="package-features">
+                                            <li><i class="bi bi-check-circle"></i> 100Mbps download speed</li>
+                                            <li><i class="bi bi-check-circle"></i> Uncapped data - no limits</li>
+                                            <li><i class="bi bi-check-circle"></i> Free installation (worth R1500)</li>
+                                            <li><i class="bi bi-check-circle"></i> 24/7 technical support</li>
+                                            <li><i class="bi bi-check-circle"></i> Free WiFi router included</li>
+                                        </ul>
+                                        <div class="package-price">
+                                            R699/month
+                                        </div>
+                                        <small class="text-muted">* First month free for new customers</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Legal Section -->
+                            <div class="legal-section">
+                                <h5><i class="bi bi-shield-check me-2"></i> TERMS & CONDITIONS</h5>
+                                <div style="max-height: 200px; overflow-y: auto; margin-bottom: 15px; padding: 10px; border: 1px solid #eee; border-radius: 5px;">
+                                    <p><strong>1. Service Agreement:</strong> By completing this order, you agree to a 24-month contract term. Early termination fees apply.</p>
+                                    <p><strong>2. Installation:</strong> Standard installation is free. Special installations may incur additional charges.</p>
+                                    <p><strong>3. Payment:</strong> Monthly payments are due in advance. Late payments may result in service suspension.</p>
+                                    <p><strong>4. Service Availability:</strong> Actual speeds may vary based on location and network conditions.</p>
+                                    <p><strong>5. Cooling-off Period:</strong> You have 7 days to cancel after installation without penalty.</p>
+                                    <p><strong>6. Data Protection:</strong> We comply with all applicable data protection laws.</p>
+                                </div>
+                                
+                                <div class="form-check terms-checkbox">
+                                    <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                                    <label class="form-check-label" for="termsCheck">
+                                        I agree to the terms and conditions and privacy policy
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-lock-fill me-2"></i> COMPLETE SECURE ORDER
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Right Column - Order Summary -->
+                    <div class="col-lg-4">
+                        <div class="order-summary">
+                            <h4 class="mb-4" style="color: var(--primary-green);"><i class="bi bi-receipt me-2"></i> ORDER SUMMARY</h4>
+                            
+                            <div class="summary-item">
+                                <span>Package:</span>
+                                <span>Home Fibre 100Mbps</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Monthly Fee:</span>
+                                <span>R699.00</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Installation:</span>
+                                <span>FREE</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Router:</span>
+                                <span>Included</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>First Month:</span>
+                                <span>FREE</span>
+                            </div>
+                            <hr>
+                            <div class="summary-item summary-total">
+                                <span>Total Today:</span>
+                                <span>R0.00</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Next Billing Date:</span>
+                                <span>30 days after activation</span>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <h5><i class="bi bi-shield-lock me-2"></i> SECURE PAYMENT</h5>
+                                <p class="small">All transactions are secured with 256-bit SSL encryption. We never store your payment details.</p>
+                                <div class="d-flex justify-content-between">
+                                    <img src="https://via.placeholder.com/50x30?text=VISA" alt="Visa" class="img-fluid">
+                                    <img src="https://via.placeholder.com/50x30?text=MC" alt="Mastercard" class="img-fluid">
+                                    <img src="https://via.placeholder.com/50x30?text=PP" alt="PayPal" class="img-fluid">
+                                    <img src="https://via.placeholder.com/50x30?text=BT" alt="Bank Transfer" class="img-fluid">
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <h5><i class="bi bi-headset me-2"></i> NEED HELP?</h5>
+                                <p class="mb-1"><i class="bi bi-telephone me-2"></i> 0861 123 456</p>
+                                <p><i class="bi bi-envelope me-2"></i> support@ndio.co.za</p>
+                                <button class="btn btn-outline-secondary w-100 mt-2">
+                                    <i class="bi bi-chat-left-text me-2"></i> Live Chat
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="{% static 'images/ndio_logo1.png' %}" width="160" height="70" alt="NDIO Logo" class="mb-3">
+                    <p>Providing reliable internet services since 2015. Connecting you to what matters most.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white text-decoration-none">Home</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Services</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Coverage</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Support</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Legal</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white text-decoration-none">Terms of Service</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">PAIA Manual</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">Complaints</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p class="mb-0">&copy; 2023 NDIO Internet Services. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Toggle address fields based on address type
+            function toggleAddressFields() {
+                const addressType = $('#id_address_type').val();
+                
+                // Hide all first
+                $('#estate_fields, #apartment_fields').addClass('hidden-fields').hide();
+                
+                // Show relevant fields
+                if (addressType === 'Estate') {
+                    $('#estate_fields').removeClass('hidden-fields').fadeIn();
+                } else if (addressType === 'Apartment') {
+                    $('#apartment_fields').removeClass('hidden-fields').fadeIn();
+                }
+            }
+            
+            // Run on page load (for when form has validation errors)
+            toggleAddressFields();
+            
+            // Run when address type changes
+            $('#id_address_type').change(toggleAddressFields);
+            
+            // Form submission handling
+            $('#orderForm').submit(function(e) {
+                if (!$('#termsCheck').is(':checked')) {
+                    e.preventDefault();
+                    alert('Please agree to the terms and conditions to proceed.');
+                    $('html, body').animate({
+                        scrollTop: $('#termsCheck').offset().top - 100
+                    }, 500);
+                }
+            });
+            
+            // Add smooth scrolling to all links
+            $("a").on('click', function(event) {
+                if (this.hash !== "") {
+                    event.preventDefault();
+                    const hash = this.hash;
+                    $('html, body').animate({
+                        scrollTop: $(hash).offset().top
+                    }, 800, function(){
+                        window.location.hash = hash;
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

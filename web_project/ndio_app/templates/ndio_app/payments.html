@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" 
+          rel="stylesheet">
+    <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
+    <title>Payment</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .payment-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .header {
+            background-color: #ff7f00;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px 10px 0 0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .btn-pay {
+            background-color: #ff7f00;
+            border: none;
+            color: white;
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+        .btn-pay:hover {
+            background-color: #e67000;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="header">Make a Payment</div>
+        <p class="mt-3">You are paying for: </p>
+        <div class="row">
+            <div class="col md-10"><strong>{{ product_name }}</strong></div>
+            <!-- Add the dropdown here one time -->
+            <div class="col md-2"><a href="#"><button class="btn btn-primary">Change</button></a></div> 
+        </div>
+        <br>
+        <form id="paymentForm" method="post" action="{% url 'process_payment' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Wifi Router Price (R):</label>
+                <input type="number" class="form-control" value="300" readonly>
+            </div>
+            <hr>
+            {{ form.as_p }}
+            <p class="fw-bold">Total: R{{ amount }}</p>
+            <button id="payButton" type="submit" class="btn btn-pay">Pay Now</button>
+        </form>
+    </div>
+</body>
+</html>

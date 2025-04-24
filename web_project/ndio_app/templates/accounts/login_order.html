@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Order</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color::rgb(188, 187, 187);
+        }
+        .order-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .order-header {
+            background-color: rgb(236, 95, 0);
+            color: #ffffff;
+            padding: 10px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+        }
+        .order-button {
+            background-color:rgb(45, 131, 37);
+            color: #ffffff;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .order-button:hover {
+            background-color: #45a049;
+        }
+        .order-footer {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .order-footer a {
+            color: rgb(236, 95, 0);
+        }
+    </style>
+</head>
+<body>
+    <div class="order-container">
+        <div class="order-header">
+            <h2>Complete Your Order</h2>
+        </div>
+        <form method="POST">
+            {% csrf_token %}
+            <br><br>
+            <h1 class="text-center">LOGIN</h1>
+            <br><br>
+            {{ form.as_p }}
+            <button type="submit" class="order-button">Login</button>
+        </form>
+        <div class="order-footer">
+            <p>Need help? <a href="#">Contact us</a></p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

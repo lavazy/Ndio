@@ -1,0 +1,780 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">  
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <title>NDIO | Business VoIP Solutions</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+    :root {
+        --primary-green: #2ecc71;
+        --dark-green: #27ae60;
+        --light-green: #d5f5e3;
+        --primary-orange: #e67e22;
+        --dark-orange: #d35400;
+        --black: #2c3e50;
+        --dark-black: #1a252f;
+        --white: #ffffff;
+        --light-gray: #ecf0f1;
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+        --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+        --shadow-lg: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        color: var(--black);
+        overflow-x: hidden;
+        background-color: var(--white);
+    }
+
+    /* Navbar Styles */
+    .navbar {
+        background-color: var(--dark-green);
+        box-shadow: var(--shadow-md);
+        padding: 0.8rem 2rem;
+        position: sticky;
+        top: 0;
+        z-index: 1030;
+        transition: var(--transition);
+    }
+
+    .navbar.scrolled {
+        background-color: var(--dark-black);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    .navbar-brand img {
+        transition: var(--transition);
+        height: 50px;
+        width: auto;
+    }
+
+    .navbar-brand img:hover {
+        transform: scale(1.05);
+    }
+
+    .nav-link {
+        color: rgba(255,255,255,0.9) !important;
+        font-weight: 500;
+        padding: 0.5rem 1rem !important;
+        margin: 0 0.25rem;
+        border-radius: 6px;
+        transition: var(--transition);
+        position: relative;
+    }
+
+    .nav-link:hover, .nav-link.active {
+        color: var(--white) !important;
+        background: rgba(255,255,255,0.15);
+    }
+
+    .nav-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 6px;
+        height: 6px;
+        background: var(--primary-orange);
+        border-radius: 50%;
+    }
+
+    .nav-link i {
+        font-size: 1.1rem;
+        margin-right: 6px;
+    }
+
+    .dropdown-menu {
+        border: none;
+        box-shadow: var(--shadow-lg);
+        border-radius: 8px;
+        padding: 0.5rem 0;
+        background-color: var(--black);
+    }
+
+    .dropdown-item {
+        color: var(--white);
+        padding: 0.5rem 1.5rem;
+        transition: var(--transition);
+    }
+
+    .dropdown-item:hover {
+        background-color: var(--primary-orange);
+        color: var(--white);
+    }
+
+    /* VoIP Hero Section */
+    .voip-hero {
+        position: relative;
+        height: 70vh;
+        min-height: 600px;
+        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url("{% static 'images/background2.png' %}");
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        color: var(--white);
+        overflow: hidden;
+    }
+
+    .voip-hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 0 2rem;
+    }
+
+    .voip-hero h1 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 3.5rem;
+        font-weight: 800;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .voip-hero .lead {
+        font-size: 1.5rem;
+        max-width: 700px;
+        margin: 0 auto 2rem;
+    }
+
+    .cta-button {
+        background-color: var(--primary-orange);
+        color: var(--white);
+        padding: 0.8rem 2.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: var(--transition);
+        border: none;
+        box-shadow: var(--shadow-md);
+    }
+
+    .cta-button:hover {
+        background-color: var(--dark-orange);
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    /* Features Section */
+    .features-section {
+        padding: 5rem 0;
+        background-color: var(--light-gray);
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .section-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--black);
+        position: relative;
+        display: inline-block;
+    }
+
+    .section-title:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background-color: var(--primary-orange);
+        border-radius: 2px;
+    }
+
+    .section-subtitle {
+        color: var(--black);
+        opacity: 0.8;
+        max-width: 700px;
+        margin: 1rem auto 0;
+    }
+
+    .feature-card {
+        background: var(--white);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition);
+        height: 100%;
+        text-align: center;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        color: var(--white);
+        font-size: 2rem;
+    }
+
+    .feature-title {
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--dark-black);
+    }
+
+    /* How It Works Section */
+    .how-it-works {
+        padding: 5rem 0;
+        background-color: var(--white);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .how-it-works:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("{% static 'images/network-pattern.png' %}") repeat;
+        opacity: 0.05;
+        z-index: 0;
+    }
+
+    .step-card {
+        background: var(--white);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-md);
+        position: relative;
+        z-index: 1;
+        border-left: 4px solid var(--primary-orange);
+    }
+
+    .step-number {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        background-color: var(--primary-orange);
+        color: var(--white);
+        border-radius: 50%;
+        text-align: center;
+        line-height: 40px;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+
+    .popular-badge {
+        position: absolute;
+        top: -15px;
+        right: 20px;
+        background-color: var(--primary-orange);
+        color: var(--white);
+        padding: 0.25rem 1rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    /* CTA Section */
+    .cta-section {
+        padding: 4rem 0;
+        background-color: var(--dark-black);
+        color: var(--white);
+        text-align: center;
+    }
+
+    .cta-section h2 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+    }
+
+    .cta-section .lead {
+        max-width: 700px;
+        margin: 0 auto 2rem;
+        opacity: 0.9;
+    }
+
+    .btn-block{
+        border-radius: 50px !important;
+        padding: 1rem 2rem;
+        background-color: var(--primary-orange);
+        border: none;
+        font-weight: 500;
+        transition: var(--transition);
+        width: 100%;
+    }
+
+    .btn-block:hover{
+        background-color: var(--dark-orange);
+        transform: translateY(-2px);
+    }
+
+    /* Footer */
+    .footer {
+        background-color: var(--dark-black);
+        color: var(--white);
+        padding: 4rem 0 2rem;
+    }
+
+    .footer-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: var(--primary-green);
+    }
+
+    .footer-logo {
+        max-width: 200px;
+        margin-bottom: 1.5rem;
+    }
+
+    .footer-links {
+        list-style: none;
+        padding: 0;
+    }
+
+    .footer-links li {
+        margin-bottom: 0.75rem;
+    }
+
+    .footer-links a {
+        color: var(--light-gray);
+        text-decoration: none;
+        transition: var(--transition);
+    }
+
+    .footer-links a:hover {
+        color: var(--primary-orange);
+        padding-left: 5px;
+    }
+
+    .social-icons {
+        margin-top: 1.5rem;
+    }
+
+    .social-icons a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background-color: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        margin-right: 10px;
+        color: var(--white);
+        transition: var(--transition);
+    }
+
+    .social-icons a:hover {
+        background-color: var(--primary-orange);
+        transform: translateY(-3px);
+    }
+
+    .copyright {
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding-top: 2rem;
+        margin-top: 3rem;
+        font-size: 0.9rem;
+        color: rgba(255,255,255,0.7);
+    }
+
+    /* Back to Top Button */
+    .back-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background-color: var(--primary-orange);
+        color: var(--white);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        z-index: 99;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: var(--transition);
+        box-shadow: var(--shadow-md);
+    }
+
+    .back-to-top.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .back-to-top:hover {
+        background-color: var(--dark-orange);
+        transform: translateY(-3px);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 991.98px) {
+        .voip-hero h1 {
+            font-size: 2.5rem;
+        }
+        
+        .voip-hero .lead {
+            font-size: 1.25rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .navbar {
+            padding: 0.8rem 1rem;
+        }
+        
+        .voip-hero {
+            height: 60vh;
+            min-height: 500px;
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        .voip-hero h1 {
+            font-size: 2rem;
+        }
+        
+        .voip-hero .lead {
+            font-size: 1.1rem;
+        }
+        
+        .section-title {
+            font-size: 1.75rem;
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+        }
+    }
+    </style>
+</head>
+
+<body>
+    <!-- VoIP Hero Section -->
+    <section class="voip-hero">
+        <div class="container voip-hero-content text-center">
+            <a href="{% url 'home' %}" class="btn btn-outline-light mb-3">
+                <i class="bi bi-arrow-left-circle"></i> Back to Homepage
+            </a><br><br>
+            <div data-aos="fade-up" data-aos-duration="1000">
+                <h1>Revolutionize Your Business Communications</h1>
+                <p class="lead">NDIO's VoIP solutions deliver crystal-clear voice quality, advanced features, and significant cost savings for businesses of all sizes.</p>
+                <a href="#contact-section" class="btn cta-button">Get Started Today</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">Why Choose NDIO VoIP?</h2>
+                <p class="section-subtitle">Experience the future of business telephony with our feature-rich, reliable VoIP solutions</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h4 class="feature-title">Reliability</h4>
+                        <p>99.99% uptime guarantee with automatic failover to keep your business connected during outages.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-graph-up"></i>
+                        </div>
+                        <h4 class="feature-title">Scalability</h4>
+                        <p>Easily add or remove lines as your business grows without expensive hardware upgrades.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-headset"></i>
+                        </div>
+                        <h4 class="feature-title">24/7 Support</h4>
+                        <p>Our local support team is available around the clock to assist with any questions or issues.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">How NDIO VoIP Works</h2>
+                <p class="section-subtitle">Getting started with our VoIP service is quick and easy</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h4>Choose Your Plan</h4>
+                        <p>Select the VoIP package that best fits your business needs and budget. We offer flexible options for businesses of all sizes.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h4>Port Your Numbers</h4>
+                        <p>Keep your existing business numbers or get new ones. Our team handles the porting process seamlessly.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h4>Set Up Your System</h4>
+                        <p>Configure your call flows, extensions, and features through our easy-to-use online portal or with our assistance.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h4>Start Communicating</h4>
+                        <p>Connect your IP phones or use our softphone apps to begin making crystal-clear calls immediately.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <!-- Contact Request Section -->
+    <section class="register-section py-5">
+        <div class="content-center" data-aos="fade-up">
+            <h2 class="text-center mb-4">Request a Free Cabling Consultation</h2>
+            
+            <form method="POST" action="" class="needs-validation p-4 rounded bg-light" novalidate style="background-color: #f8f9fa;">
+            {% csrf_token %}
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="name" placeholder="Name" required>
+                            <div class="invalid-feedback">
+                                Please provide your name.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="surname" placeholder="Surname" required>
+                            <div class="invalid-feedback">
+                                Please provide your surname.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="email" class="form-control" name="email" placeholder="Email" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid email.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="address" placeholder="Enter Address" required>
+                            <input type="hidden" class="form-control" id="service" value="Network Cabling" name="service" required>
+                            <div class="invalid-feedback">
+                                Please provide your address.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="company" placeholder="Company Name" required>
+                            <div class="invalid-feedback">
+                                Please provide a Company name.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <textarea class="form-control" name="requirements" rows="3" placeholder="Describe your cabling requirements" required></textarea>
+                    <div class="invalid-feedback">
+                        Please describe your needs.
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-warning text-white" style="background-color: #fd7e14; border-color: #fd7e14;">Request Consultation</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container" data-aos="fade-up">
+            <h2>Ready to Transform Your Business Communications?</h2>
+            <p class="lead">Join thousands of South African businesses enjoying reliable, feature-rich VoIP service from NDIO.</p>
+        </div>
+    </section>
+    
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <img src="{% static 'images/ndio_logo.png' %}" alt="NDIO Logo" class="footer-logo">
+                    <p class="text-light">Providing cutting-edge communication solutions to power your business.</p>
+                </div>
+                
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <h5 class="footer-title">Contact Us</h5>
+                    <ul class="footer-links">
+                        <li><i class="bi bi-telephone me-2"></i> +27 87 152 3643</li>
+                        <li><i class="bi bi-envelope me-2"></i> voip@ndio.co.za</li>
+                        <li><i class="bi bi-geo-alt me-2"></i> 16 Orange Street Gardens, Cape Town</li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 mb-5 mb-lg-0">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="/home">Home</a></li>
+                        <li><a href="/about">About us</a></li>
+                        <li><a href="/faqs">FAQs</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2">
+                    <h5 class="footer-title">Follow Us</h5>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/" target="blank"><i class="bi bi-facebook"></i></a>
+                        <a href="https://x.com/" target="blank"><i class="bi bi-twitter-x"></i></a>
+                        <a href="https://www.instagram.com/" target="blank"><i class="bi bi-instagram"></i></a>
+                        <a href="https://www.linkedin.com/" target="blank"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright text-center">
+                <p class="mb-0">&copy; 2024 NDIO. All rights reserved. | <a href="/privacy-policy" class="text-light">Privacy Policy</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top">
+        <i class="bi bi-chevron-up"></i>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+        // Initialize AOS animations
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                document.querySelector('.navbar').classList.add('scrolled');
+            } else {
+                document.querySelector('.navbar').classList.remove('scrolled');
+            }
+        });
+
+        // Back to top button
+        const backToTopButton = document.querySelector('.back-to-top');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) {
+                backToTopButton.classList.add('active');
+            } else {
+                backToTopButton.classList.remove('active');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,797 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account | Internet Services</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #4caf50;
+            --dark-green: #1b5e20;
+            --primary-orange: #ff6d00;
+            --light-orange: #ff9100;
+            --dark-orange: #e65100;
+            --gradient-bg: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .navbar {
+            background: var(--gradient-bg);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand img {
+            transition: transform 0.3s ease;
+        }
+        
+        .navbar-brand img:hover {
+            transform: scale(1.05);
+        }
+        
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            margin: 0 0.2rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+        
+        .welcome-banner {
+            background: var(--gradient-bg);
+            color: white;
+            padding: 2rem;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .welcome-banner h1 {
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+        
+        .greeting {
+            color: var(--light-orange);
+            font-weight: 600;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            background: var(--gradient-bg);
+            color: white;
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .info-box {
+            background: white;
+            border-left: 4px solid var(--primary-orange);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .info-box:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+        }
+        
+        .info-box h5 {
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+        
+        .info-box .amount {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark-orange);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-orange);
+            border-color: var(--primary-orange);
+            font-weight: 500;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--dark-orange);
+            border-color: var(--dark-orange);
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary-green);
+            border-color: var(--primary-green);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-green);
+            color: white;
+        }
+        
+        .quick-access {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .quick-access-item {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .quick-access-item:hover {
+            background-color: rgba(76, 175, 80, 0.1);
+            transform: scale(1.05);
+        }
+        
+        .quick-access-item i {
+            font-size: 2rem;
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+        }
+        
+        .quick-access-item h5 {
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+        
+        .referral-box {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .copy-link {
+            --height: 42px;
+            display: flex;
+            max-width: 100%;
+        }
+        
+        .copy-link-input {
+            flex-grow: 1;
+            padding: 0 12px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-right: none;
+            outline: none;
+            border-radius: 5px 0 0 5px;
+        }
+        
+        .copy-link-button {
+            flex-shrink: 0;
+            width: var(--height);
+            height: var(--height);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-orange);
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-link-button:hover {
+            background: var(--dark-orange);
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 3rem;
+            margin-top: 2rem;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 1.5rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary-green);
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -3rem;
+            top: 0;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            background: var(--primary-orange);
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px var(--primary-orange);
+        }
+        
+        .timeline-item.completed::before {
+            background: var(--primary-green);
+            box-shadow: 0 0 0 3px var(--primary-green);
+        }
+        
+        .timeline-item.active::before {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+        }
+        
+        .referral-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 8px;
+            background: rgba(76, 175, 80, 0.1);
+            flex: 1;
+            margin: 0 0.5rem;
+        }
+        
+        .stat-box h3 {
+            color: var(--primary-green);
+            font-weight: 700;
+        }
+        
+        .stat-box p {
+            color: var(--dark-green);
+            font-weight: 500;
+        }
+        
+        .service-card {
+            border-left: 4px solid var(--primary-orange);
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .service-card:hover {
+            transform: translateX(5px);
+        }
+        
+        .service-status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background-color: rgba(46, 125, 50, 0.1);
+            color: var(--primary-green);
+        }
+        
+        .status-pending {
+            background-color: rgba(255, 109, 0, 0.1);
+            color: var(--primary-orange);
+        }
+        
+        .status-suspended {
+            background-color: rgba(239, 83, 80, 0.1);
+            color: #ef5350;
+        }
+        
+        footer {
+            background: var(--gradient-bg);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--light-orange);
+            text-decoration: underline;
+        }
+        
+        .social-icons a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            color: var(--light-orange);
+            transform: translateY(-3px);
+        }
+        
+        @media (max-width: 768px) {
+            .welcome-banner {
+                text-align: center;
+            }
+            
+            .quick-access-item {
+                margin-bottom: 1rem;
+            }
+            
+            .referral-stats {
+                flex-direction: column;
+            }
+            
+            .stat-box {
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="{% static 'images/ndio_logo.png' %}" width="180" height="80" alt="Company Logo" class="img-fluid">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-person-circle me-1"></i> {{ user.username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#profile"><i class="bi bi-person me-2"></i>My Profile</a></li>
+                                <li><a class="dropdown-item" href="#settings"><i class="bi bi-gear me-2"></i>Settings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'home' %}"><i class="bi bi-box-arrow-left me-2"></i>Logout</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#support"><i class="bi bi-headset me-1"></i> Support</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Welcome Banner -->
+    <div class="welcome-banner animate__animated animate__fadeIn">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1>NDIO USER PROFILE</h1>
+                    <p class="lead mb-0">MANAGE, UPDATE AND VIEW ALL YOUR INTERNET SERVICES</p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <div class="greeting fs-4">
+                        <i class="bi bi-sun-fill me-2"></i>GOOD AFTERNOON, {{ user.username|upper }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                <!-- Account Summary -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="info-box">
+                            <h5>MY ACCOUNT INFO</h5>
+                            <p class="mb-1"><strong>Account Number:</strong> ACC-{{ user.id|stringformat:"06d" }}</p>
+                            <p class="mb-1"><strong>Member Since:</strong> Jan 2023</p>
+                            <p><strong>Last Login:</strong> Today, 14:30</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-box">
+                            <h5>AMOUNT DUE</h5>
+                            <p class="amount">R349.00</p>
+                            <p class="text-muted">Due by: 15th of each month</p>
+                            <button class="btn btn-primary btn-sm"><i class="bi bi-credit-card me-1"></i> Pay Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Tracking -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-truck me-2"></i>ORDER TRACKING</span>
+                        <span class="badge bg-warning text-dark">In Progress</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline">
+                            <div class="timeline-item completed">
+                                <h5>Order Placed</h5>
+                                <p class="text-muted">June 1, 2023 - 10:30 AM</p>
+                                <p>Your order has been received and is being processed.</p>
+                            </div>
+                            <div class="timeline-item completed">
+                                <h5>Payment Confirmed</h5>
+                                <p class="text-muted">June 1, 2023 - 11:45 AM</p>
+                                <p>Payment has been successfully processed.</p>
+                            </div>
+                            <div class="timeline-item active">
+                                <h5>Installation Scheduled</h5>
+                                <p class="text-muted">June 3, 2023 - 9:00 AM to 12:00 PM</p>
+                                <p>Our technician will arrive during this time window.</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h5>Installation Completed</h5>
+                                <p class="text-muted">Pending</p>
+                                <p>Your service will be activated after installation.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products/Services -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="bi bi-wifi me-2"></i>PRODUCTS/SERVICES
+                    </div>
+                    <div class="card-body">
+                        <div class="service-card p-3">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h5>Home Fibre 100Mbps</h5>
+                                    <p class="mb-1">Uncapped, unshaped, unthrottled</p>
+                                    <p class="text-muted small">Contract ends: June 1, 2024</p>
+                                </div>
+                                <div class="text-end">
+                                    <span class="service-status status-active">Active</span>
+                                    <p class="mb-0">R699/month</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="service-card p-3">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h5>Static IP Address</h5>
+                                    <p class="mb-1">Dedicated IP for your connection</p>
+                                </div>
+                                <div class="text-end">
+                                    <span class="service-status status-active">Active</span>
+                                    <p class="mb-0">R99/month</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="service-card p-3">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h5>WiFi Router Upgrade</h5>
+                                    <p class="mb-1">Premium dual-band router</p>
+                                    <p class="text-muted small">Installation pending</p>
+                                </div>
+                                <div class="text-end">
+                                    <span class="service-status status-pending">Pending</span>
+                                    <p class="mb-0">R1499 once-off</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-outline-primary mt-2"><i class="bi bi-plus-circle me-1"></i> Add Service</button>
+                    </div>
+                </div>
+
+                <!-- Support Tickets -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-headset me-2"></i>SUPPORT TICKETS
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Ticket #</th>
+                                        <th>Subject</th>
+                                        <th>Status</th>
+                                        <th>Last Update</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>#TKT-7842</td>
+                                        <td>Slow connection speeds</td>
+                                        <td><span class="badge bg-success">Resolved</span></td>
+                                        <td>2 days ago</td>
+                                    </tr>
+                                    <tr>
+                                        <td>#TKT-7915</td>
+                                        <td>Router configuration</td>
+                                        <td><span class="badge bg-warning text-dark">In Progress</span></td>
+                                        <td>Today, 09:15</td>
+                                    </tr>
+                                    <tr>
+                                        <td>#TKT-8023</td>
+                                        <td>Billing inquiry</td>
+                                        <td><span class="badge bg-info">Pending Response</span></td>
+                                        <td>1 week ago</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button class="btn btn-primary"><i class="bi bi-plus-circle me-1"></i> New Ticket</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Quick Access -->
+                <div class="quick-access mb-4">
+                    <h4 class="mb-4 text-center" style="color: var(--primary-green);"><i class="bi bi-lightning-charge me-2"></i>QUICK ACCESS</h4>
+                    <div class="row">
+                        <div class="col-6 col-md-6 mb-3">
+                            <div class="quick-access-item">
+                                <i class="bi bi-truck"></i>
+                                <h5>Moving Home</h5>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-6 mb-3">
+                            <div class="quick-access-item">
+                                <i class="bi bi-wifi"></i>
+                                <h5>My Packages</h5>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-6 mb-3">
+                            <div class="quick-access-item">
+                                <i class="bi bi-person-gear"></i>
+                                <h5>Edit Profile</h5>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-6 mb-3">
+                            <div class="quick-access-item">
+                                <i class="bi bi-file-text"></i>
+                                <h5>Invoices</h5>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-6 mb-3">
+                            <div class="quick-access-item">
+                                <i class="bi bi-credit-card"></i>
+                                <h5>Payment</h5>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-6 mb-3">
+                            <div class="quick-access-item">
+                                <i class="bi bi-share"></i>
+                                <h5>Refer Friends</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Referral Program -->
+                <div class="referral-box mb-4">
+                    <h4 class="mb-3" style="color: var(--primary-green);"><i class="bi bi-gift me-2"></i>REFER & EARN</h4>
+                    <p>Share your referral link and earn R100 credit for each friend who signs up!</p>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Your Referral Link:</label>
+                        <div class="copy-link">
+                            <input type="text" class="copy-link-input" value="http://127.0.0.1:8000/home_referral/{{ ref_code }}" readonly>
+                            <button type="button" class="copy-link-button">
+                                <i class="bi bi-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="referral-stats">
+                        <div class="stat-box">
+                            <h3>5</h3>
+                            <p>Referred</p>
+                        </div>
+                        <div class="stat-box">
+                            <h3>3</h3>
+                            <p>Active</p>
+                        </div>
+                        <div class="stat-box">
+                            <h3>R300</h3>
+                            <p>Earned</p>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary w-100 mt-3"><i class="bi bi-share-fill me-1"></i> Share via Email/Social</button>
+                </div>
+
+                <!-- Referred Users -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="bi bi-people me-2"></i>YOUR REFERRALS
+                    </div>
+                    <div class="card-body">
+                        {% if referred_users %}
+                            <div class="list-group">
+                                {% for user in referred_users %}
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-0">{{ user.username }}</h6>
+                                            <small class="text-muted">Joined {{ user.date_joined|date:"M d, Y" }}</small>
+                                        </div>
+                                        <span class="badge bg-success">Active</span>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-3">
+                                <i class="bi bi-emoji-frown fs-1" style="color: var(--primary-orange);"></i>
+                                <p class="mt-2">You haven't referred anyone yet.</p>
+                                <button class="btn btn-sm btn-outline-primary">Share Your Link</button>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Promo Banner -->
+                <div class="card border-0 bg-light" style="background: linear-gradient(135deg, rgba(255,109,0,0.1) 0%, rgba(76,175,80,0.1) 100%);">
+                    <div class="card-body text-center">
+                        <h5 class="mb-3" style="color: var(--primary-orange);">NO FUSS SWITCH-A-ROOS!</h5>
+                        <p>Switch to us and we'll handle everything - no downtime, no hassle!</p>
+                        <button class="btn btn-primary btn-sm">Learn More</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <img src="{% static 'images/ndio_logo.png' %}" width="160" height="70" alt="Company Logo" class="img-fluid mb-3">
+                    <p>Providing reliable internet services since 2010. Connecting you to what matters most.</p>
+                </div>
+                <div class="col-md-4 mb-4 mb-md-0 text-center">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <div class="footer-links d-flex flex-column">
+                        <a href="#"><i class="bi bi-chevron-right me-1"></i> Home</a>
+                        <a href="#"><i class="bi bi-chevron-right me-1"></i> Services</a>
+                        <a href="#"><i class="bi bi-chevron-right me-1"></i> Coverage</a>
+                        <a href="#"><i class="bi bi-chevron-right me-1"></i> Support</a>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center text-md-end">
+                    <h5 class="mb-3">Connect With Us</h5>
+                    <div class="social-icons mb-3">
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-twitter"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                    <p><i class="bi bi-telephone me-2"></i> 0861 123 456</p>
+                    <p><i class="bi bi-envelope me-2"></i> support@yourisp.com</p>
+                </div>
+            </div>
+            <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2023 Your ISP. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        // Copy referral link functionality
+        document.querySelectorAll(".copy-link").forEach(copyLinkContainer => {
+            const inputField = copyLinkContainer.querySelector(".copy-link-input");
+            const copyButton = copyLinkContainer.querySelector(".copy-link-button");
+            const originalText = inputField.value;
+
+            inputField.addEventListener("focus", () => inputField.select());
+
+            copyButton.addEventListener("click", () => {
+                inputField.select();
+                navigator.clipboard.writeText(originalText);
+                
+                // Visual feedback
+                const originalButtonHTML = copyButton.innerHTML;
+                copyButton.innerHTML = '<i class="bi bi-check"></i>';
+                copyButton.style.backgroundColor = 'var(--primary-green)';
+                
+                setTimeout(() => {
+                    copyButton.innerHTML = originalButtonHTML;
+                    copyButton.style.backgroundColor = 'var(--primary-orange)';
+                }, 2000);
+            });
+        });
+
+        // Animate timeline items on scroll
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate__animated', 'animate__fadeInRight');
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        timelineItems.forEach(item => {
+            observer.observe(item);
+        });
+
+        // Quick access item hover effects
+        document.querySelectorAll('.quick-access-item').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                const icon = item.querySelector('i');
+                icon.classList.add('animate__animated', 'animate__pulse');
+                
+                // Remove animation class after it completes to allow it to run again
+                setTimeout(() => {
+                    icon.classList.remove('animate__animated', 'animate__pulse');
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>

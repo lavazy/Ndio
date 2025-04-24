@@ -1,0 +1,43 @@
+============= NDIO WEB PROJECT ===============
+
+Parts of the API that we need: 
+
+1. The search for availability of: 
+    - MTN LTE
+    - TELKOM LTE
+    - VODACOM LTE
+    - FIBRE
+
+2. The different fibre and LTE packages
+    TITLE ON API DOCS CONTENT:
+        - CREATE SERVICE
+        - TICKETS
+        - FIBRE
+        - MAP RENDER REQUIREMENTS
+
+3. The payment functions for the different services
+
+4. Client functionalities
+
+
+<form role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+</form>
+
+
+from django import forms
+
+class MyForm(forms.Form):
+    # This field will be hidden in the HTML
+    my_field = forms.CharField(widget=forms.HiddenInput())
+    # Other visible fields
+    name = forms.CharField(max_length=100)
+    email = forms.EmailField()
+
+=== Forms ===
+
+1. VoIP - email only
+2. Wireless Internet - email, name, surname, address
+3. network cabling - email, name, surname, address, description
+4. 

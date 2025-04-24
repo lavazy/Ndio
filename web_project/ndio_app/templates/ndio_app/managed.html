@@ -1,0 +1,596 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">  
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <title>NDIO | Managed IT Services</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+    :root {
+        --primary-green: #2ecc71;
+        --dark-green: #27ae60;
+        --light-green: #d5f5e3;
+        --primary-orange: #e67e22;
+        --dark-orange: #d35400;
+        --black: #2c3e50;
+        --dark-black: #1a252f;
+        --white: #ffffff;
+        --light-gray: #ecf0f1;
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+        --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+        --shadow-lg: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        color: var(--black);
+        overflow-x: hidden;
+        background-color: var(--white);
+    }
+
+    /* Navbar Styles */
+    .navbar {
+        background-color: var(--dark-green);
+        box-shadow: var(--shadow-md);
+        padding: 0.8rem 2rem;
+        position: sticky;
+        top: 0;
+        z-index: 1030;
+        transition: var(--transition);
+    }
+
+    .navbar.scrolled {
+        background-color: var(--dark-black);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    .navbar-brand img {
+        transition: var(--transition);
+        height: 50px;
+        width: auto;
+    }
+
+    .navbar-brand img:hover {
+        transform: scale(1.05);
+    }
+
+    .nav-link {
+        color: rgba(255,255,255,0.9) !important;
+        font-weight: 500;
+        padding: 0.5rem 1rem !important;
+        margin: 0 0.25rem;
+        border-radius: 6px;
+        transition: var(--transition);
+        position: relative;
+    }
+
+    .nav-link:hover, .nav-link.active {
+        color: var(--white) !important;
+        background: rgba(255,255,255,0.15);
+    }
+
+    .nav-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 6px;
+        height: 6px;
+        background: var(--primary-orange);
+        border-radius: 50%;
+    }
+
+    /* Hero Section */
+    .hero {
+        position: relative;
+        height: 80vh;
+        min-height: 600px;
+        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url("{% static 'images/background.png' %}");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        display: flex;
+        align-items: center;
+        color: var(--white);
+        overflow: hidden;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 0 2rem;
+    }
+
+    .headline {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 4.5rem;
+        font-weight: 800;
+        color: var(--white);
+        text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+        line-height: 1.1;
+        margin-bottom: 1rem;
+    }
+
+    .slogan {
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--primary-orange);
+        margin-bottom: 1.5rem;
+    }
+
+    /* Services Section */
+    .services-section {
+        padding: 5rem 0;
+    }
+
+    .service-card {
+        background: var(--white);
+        border-radius: 12px;
+        padding: 2.5rem;
+        height: 100%;
+        transition: var(--transition);
+        box-shadow: var(--shadow-md);
+        border-top: 4px solid var(--primary-green);
+    }
+
+    .service-card:hover {
+        transform: translateY(-10px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .service-icon {
+        font-size: 3rem;
+        color: var(--primary-green);
+        margin-bottom: 1.5rem;
+    }
+
+    .service-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: var(--dark-green);
+    }
+
+    /* Features Section */
+    .features-section {
+        background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+        padding: 5rem 0;
+        color: var(--white);
+    }
+
+    .feature-item {
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        color: var(--primary-orange);
+    }
+
+    /* CTA Section */
+    .cta-section {
+        background: url("{% static 'images/cta-bg.jpg' %}") no-repeat center center;
+        background-size: cover;
+        padding: 6rem 0;
+        position: relative;
+    }
+
+    .cta-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+    }
+
+    .cta-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .cta-btn {
+        background-color: var(--primary-orange);
+        border: none;
+        padding: 0.8rem 2.5rem;
+        font-weight: 600;
+        transition: var(--transition);
+    }
+
+    .cta-btn:hover {
+        background-color: var(--dark-orange);
+        transform: translateY(-3px);
+    }
+
+    /* Testimonials */
+    .testimonial-card {
+        background: var(--white);
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: var(--shadow-md);
+        margin: 1rem;
+    }
+
+    .testimonial-text {
+        font-style: italic;
+        margin-bottom: 1.5rem;
+    }
+
+    .client-name {
+        font-weight: 600;
+        color: var(--dark-green);
+    }
+
+    /* Footer */
+    .footer {
+        background-color: var(--dark-black);
+        color: var(--white);
+        padding: 4rem 0 2rem;
+    }
+
+    .footer-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: var(--primary-green);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 991.98px) {
+        .headline {
+            font-size: 3.5rem;
+        }
+        
+        .slogan {
+            font-size: 1.5rem;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .headline {
+            font-size: 2.5rem;
+        }
+        
+        .hero {
+            height: 70vh;
+            min-height: 500px;
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        .headline {
+            font-size: 2rem;
+        }
+        
+        .slogan {
+            font-size: 1.25rem;
+        }
+    }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'images/Ndio_logo3.png' %}" alt="NDIO Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Managed IT</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Cybersecurity</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Cloud Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div data-aos="fade-up" data-aos-duration="1000">
+                <h1 class="headline">Managed IT Services</h1>
+                <h3 class="slogan">Proactive IT solutions for your growing business</h3>
+                <a href="#services" class="btn btn-primary btn-lg mt-3">Explore Services</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Intro Section -->
+    <section class="py-5 bg-light">
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right">
+                    <h2 class="display-5 fw-bold mb-4">Your Trusted IT Partner</h2>
+                    <p class="lead">NDIO provides comprehensive managed IT services that allow you to focus on your core business while we handle your technology infrastructure.</p>
+                    <p>With our proactive approach, 24/7 monitoring, and expert support, we ensure your systems run smoothly and securely at all times.</p>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <img src="{% static 'images/it-partner.jpg' %}" alt="IT Partner" class="img-fluid rounded shadow">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services-section">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="display-4 fw-bold mb-3">Our Managed IT Services</h2>
+                <p class="lead text-muted">Comprehensive solutions tailored to your business needs</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="bi bi-pc-display"></i>
+                        </div>
+                        <h3 class="service-title">Managed IT Support</h3>
+                        <p>24/7 monitoring, maintenance, and support for all your IT infrastructure with rapid response times.</p>
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-check-circle text-primary me-2"></i> Helpdesk support</li>
+                            <li><i class="bi bi-check-circle text-primary me-2"></i> Remote troubleshooting</li>
+                            <li><i class="bi bi-check-circle text-primary me-2"></i> On-site assistance</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="bi bi-shield-lock"></i>
+                        </div>
+                        <h3 class="service-title">Cybersecurity</h3>
+                        <p>Comprehensive protection against evolving threats with enterprise-grade security solutions.</p>
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-check-circle text-primary me-2"></i> Threat monitoring</li>
+                            <li><i class="bi bi-check-circle text-primary me-2"></i> Vulnerability assessments</li>
+                            <li><i class="bi bi-check-circle text-primary me-2"></i> Security training</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="bi bi-cloud"></i>
+                        </div>
+                        <h3 class="service-title">Cloud Services</h3>
+                        <p>Seamless migration, management, and optimization of your cloud infrastructure.</p>
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-check-circle text-primary me-2"></i> Cloud migration</li>
+                            <li><i class="bi bi-check-circle text-primary me-2"></i> Hybrid cloud solutions</li>
+                            <li><i class="bi bi-check-circle text-primary me-2"></i> Cost optimization</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="bi bi-graph-up"></i>
+                        </div>
+                        <h3 class="service-title">IT Consulting</h3>
+                        <p>Strategic guidance to align your technology with business objectives for maximum ROI.</p>
+                        <ul class="list-unstyled">
+                            <li><i class="bi bi-check-circle text-primary me-2"></i> Technology roadmap</li>
+                            <li><i class="bi bi-check-circle text-primary me-2"></i> Digital transformation</li>
+                            <li><i class="bi bi-check-circle text-primary me-2"></i> Vendor management</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="display-4 fw-bold mb-3 text-white">Why Choose NDIO?</h2>
+                <p class="lead text-white-50">We deliver exceptional value through our expertise and commitment</p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="bi bi-headset"></i>
+                        </div>
+                        <h3 class="text-white">24/7 Support</h3>
+                        <p class="text-white-50">Round-the-clock monitoring and support with rapid response times.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h3 class="text-white">Enterprise Security</h3>
+                        <p class="text-white-50">Multi-layered protection against the latest cyber threats.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="bi bi-graph-up-arrow"></i>
+                        </div>
+                        <h3 class="text-white">Proactive Approach</h3>
+                        <p class="text-white-50">We identify and resolve issues before they impact your business.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container text-center cta-content" data-aos="fade-up">
+            <h2 class="display-4 fw-bold text-white mb-4">Ready to Transform Your IT?</h2>
+            <p class="lead text-white mb-5">Let's discuss how we can support your business technology needs.</p>
+            <a href="#" class="btn btn-primary btn-lg cta-btn">Get Started Today</a>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-5 bg-light">
+        <div class="container py-5">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="display-4 fw-bold mb-3">What Our Clients Say</h2>
+                <p class="lead text-muted">Trusted by businesses across industries</p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"NDIO's managed IT services have transformed our operations. Their proactive approach has reduced our downtime by 90%."</p>
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <img src="{% static 'images/client1.jpg' %}" class="rounded-circle" width="50" height="50" alt="Client">
+                            </div>
+                            <div>
+                                <h5 class="mb-0 client-name">Sarah Johnson</h5>
+                                <small class="text-muted">CEO, TechForward</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"The cybersecurity solutions provided by NDIO give us peace of mind in an increasingly dangerous digital landscape."</p>
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <img src="{% static 'images/client2.jpg' %}" class="rounded-circle" width="50" height="50" alt="Client">
+                            </div>
+                            <div>
+                                <h5 class="mb-0 client-name">Michael Brown</h5>
+                                <small class="text-muted">CFO, FinancialSecure</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"Their cloud migration expertise helped us reduce costs by 40% while improving performance and scalability."</p>
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <img src="{% static 'images/client3.jpg' %}" class="rounded-circle" width="50" height="50" alt="Client">
+                            </div>
+                            <div>
+                                <h5 class="mb-0 client-name">David Wilson</h5>
+                                <small class="text-muted">CTO, RetailSolutions</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <img src="{% static 'images/ndio_logo_white.png' %}" alt="NDIO Logo" class="footer-logo mb-3">
+                    <p class="text-light">Providing cutting-edge IT solutions to power your business growth and security.</p>
+                    <div class="mt-4">
+                        <a href="#" class="text-light me-3"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-light me-3"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="text-light me-3"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="text-light"><i class="bi bi-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="{% url 'home' %}" class="text-light text-decoration-none">Home</a></li>
+                        <li class="mb-2"><a href="#" class="text-light text-decoration-none">Managed IT</a></li>
+                        <li class="mb-2"><a href="#" class="text-light text-decoration-none">Cybersecurity</a></li>
+                        <li class="mb-2"><a href="#" class="text-light text-decoration-none">Cloud Services</a></li>
+                        <li><a href="#" class="text-light text-decoration-none">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-4">
+                    <h5 class="footer-title">Contact Us</h5>
+                    <ul class="list-unstyled text-light">
+                        <li class="mb-2"><i class="bi bi-geo-alt me-2"></i> 16 Orange Street, Gardens, Cape Town</li>
+                        <li class="mb-2"><i class="bi bi-telephone me-2"></i> +27 87 152 3643</li>
+                        <li class="mb-2"><i class="bi bi-envelope me-2"></i> info@ndio.co.za</li>
+                        <li><i class="bi bi-clock me-2"></i> Mon-Fri: 8:00 AM - 5:00 PM</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="text-center mt-5 pt-4 border-top border-secondary">
+                <p class="mb-0 text-light">&copy; 2024 NDIO. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+        // Initialize AOS animations
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                document.querySelector('.navbar').classList.add('scrolled');
+            } else {
+                document.querySelector('.navbar').classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>

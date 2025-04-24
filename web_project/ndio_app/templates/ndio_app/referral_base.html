@@ -1,0 +1,637 @@
+{% load static %}
+<!DOCTYPE html>
+<html>  
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" 
+    rel="stylesheet" 
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" 
+    crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" 
+    rel="stylesheet">
+    <!-- Include Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+   <title>{% block title%}NDIO | Home Page{% endblock %}</title>
+       <meta content="utf-8" http-equiv="encoding"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvsvOuUIWak9axNX97yBDoa0oKm_f1suY&libraries=places"></script>
+
+    <script>
+    // Initialize Google Maps Autocomplete
+        let autocomplete;
+
+        function initializeAutocomplete() {
+            const input = document.getElementById("address");
+            autocomplete = new google.maps.places.Autocomplete(input);
+        }
+
+        google.maps.event.addDomListener(window, "load", initializeAutocomplete);
+    </script>
+
+    <script>
+      var map = L.map('map').setView([{{ latitude }}, {{ longitude }}], 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+      map.on("moveend", function () {
+          var bounds = map.getBounds();
+          document.getElementById("strBBox").value = bounds.toBBoxString();
+          document.getElementById("strWidth").value = map.getSize().x;
+          
+
+          var center = map.getCenter();
+          document.getElementById("strICoOrdinate").value = center.lat;
+          document.getElementById("strJCoOrdinate").value = center.lng;
+      });
+</script>
+
+<style>
+    
+    .navbar{
+        background-color: rgb(126, 206, 79);
+    }
+
+
+    .background{
+      position: relative;
+      height: 400px;
+      background-image: url("{% static 'images/background1.png' %}");
+      background-size: 100%;
+      background-position: center;
+    }
+
+    .background::after{
+        background-color: rgba(0, 0, 0, 0.55);
+    }
+
+    #services{
+        background-image: linear-gradient(to left, rgb(17, 224, 155), rgb(26, 218, 90));
+    }
+
+    .service-heading{
+        letter-spacing: 10px;
+        color: rgb(255, 255, 255);
+        -webkit-box-reflect: below 1px linear-gradient(transparent, #0008);
+        text-transform: uppercase;
+        font-size: 60px;
+        font-weight: bold;
+        line-height: 0.70em;
+        outline: none;
+    }
+
+    .nav-link{
+      color:rgb(0, 0, 0);
+      font-weight: bold;
+      transition: color 0.4s ease;
+    }    
+    
+    .nav-link:hover{
+      color:rgb(35, 165, 31);
+    }
+
+    .search-bar {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%; 
+      max-width: 600px;
+        }
+
+    .custom-card {
+    margin: 10px auto;
+    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+    border: 3px solid transparent; /* Initial border */
+    }
+
+    .custom-card:hover {
+        transform: scale(1.1); /* Zoom effect */
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Add shadow */
+        border-color: #000; /* Highlight border */
+    }
+
+    .row {
+        display: flex;
+        justify-content: center; /* Center the cards */
+        align-items: center;
+        flex-wrap: wrap; /* Wrap cards if screen size is small */
+    }
+
+    .card-body {
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+
+    #telkom_packages {
+        background-color: lightblue;
+        margin-top: 10px;
+        padding: 20px;
+        border-radius: 30px;
+        display : none;
+    }
+
+    #mtn_packages {
+        background-color: lightblue;
+        margin-top: 10px;
+        padding: 20px;
+        border-radius: 30px;
+        display : none;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+    .product-container {
+        text-align: center;
+        padding: 20px;
+    }
+
+    .product-container h1 {
+        font-size: 2.5rem;
+        color:rgb(34, 48, 37);
+        margin-bottom: 10px;
+    }
+
+    .product-container p {
+        font-size: 1.1rem;
+        color:rgb(130, 134, 134);
+        margin-bottom: 30px;
+    }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        padding: 0 20px;
+    }
+
+    .product-card {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .product-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .product-header {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #16a085;
+        margin-bottom: 10px;
+    }
+
+    .speed {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #34495e;
+    }
+
+    .price-container {
+        margin: 20px 0;
+    }
+
+    .old-price {
+        text-decoration: line-through;
+        color:rgb(231, 76, 60);
+        font-size: 1rem;
+        margin-bottom: 5px;
+    }
+
+    .new-price {
+        font-size: 1.5rem;
+        color:rgb(27, 173, 88);
+        font-weight: bold;
+    }
+
+    .new-price span,
+    .old-price span {
+        font-size: 0.8rem;
+        color: #7f8c8d;
+    }
+
+
+    .btn {
+        padding: 10px 20px;
+        background:rgb(236, 95, 0);
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: ease-in-out background 0.4s;
+        transition: color 0.4s;
+        
+    }
+
+    .btn:hover {
+        background:rgb(45, 131, 37);
+        color: rgb(255, 255, 255);
+    }
+
+    .product-card {
+    animation: fadeInUp 0.8s ease-in-out;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+
+    #details{
+        height=600
+        width= 200
+    }
+
+    .bi{
+        color: white;
+        transition: ease-in-out background 0.4s;
+        transition: color 0.4s;
+    }
+
+    .bi:hover{
+        color: rgb(45, 131, 37);
+    }
+
+    .text-uppercase{
+        color: rgb(236, 95, 0);
+    }
+
+
+    #topButton{
+        display: none; /* Hidden by default */
+        position: fixed; /* Fixed/sticky position */
+        bottom: 20px; /* Place the button at the bottom of the page */
+        right: 30px; /* Place the button 30px from the right */
+        z-index: 99; /* Make sure it does not overlap */
+        border: none; /* Remove borders */
+        outline: none; /* Remove outline */
+        background-color: rgb(236, 95, 0); /* Set a background color */
+        color: white; /* Text color */
+        cursor: pointer; /* Add a mouse pointer on hover */
+        padding: 15px; /* Some padding */
+        border-radius:  10px;/* Rounded corners */
+        font-size: 18px; /* Increase font size */
+    }
+
+
+    #topButton:hover {
+        background-color: #555;
+    }
+
+    .intro {
+        background-color: rgb(58, 58, 58);
+    }
+
+
+    .headline {
+        font-size: 120px;
+        font-weight:bold;
+        font-style: italic;
+        color:  rgb(250, 53, 4);
+        text-shadow: 3px 3px 3pxrgb(136, 135, 135); 
+    }
+
+    .slogan {
+        font-size: 35px;
+        font-weight:bold;
+        color:  rgb(23, 214, 240);
+    }
+
+    .promo {
+        font-size: 30px;
+        font-weight:bold;
+        color:  rgb(236, 28, 73);
+    }
+
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg ">
+    <div class="container-fluid">
+    <a class="navbar-brand" style="color: black" href="/"><img src="{% static 'images/ndio_logo.png' %}" width=150 height=80></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon "></span>
+    </button>
+    <div class="collapse navbar-collapse" >
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link " href="{% url 'lte_view' %}"><i class="bi bi-router-fill"> LTE</i></a>
+        <a class="nav-link " href="{% url 'fibre_view' %}"><i class="bi bi-lightning-charge-fill"> FIBRE</i></a>
+        <a class="nav-link " href="{% url 'hosting_view' %}"><i class="bi bi-globe"> HOSTING</i></a>
+        <a class="nav-link " href="{% url 'login_view' %}"><i class="bi bi-person-circle"> LOGIN</i></a>
+      </div>
+    </div>
+    </div>
+    </nav>
+
+    <div class="background">
+      <form class= "search-bar" role ="search" id="search-form" method="GET" action="{% url 'home' %}">
+        <div class="input-group">
+        <input class="form-control" type="search" id="address" name="address" placeholder="Enter your address" required>
+        <button class="btn btn-dark" type="submit">Search</button>
+        </div>
+
+        <!-- Map Information for rendering -->
+        <div id="map" style="height: 500px width: 500px;"></div>
+          <input type="hidden" id="strBBox" name="strBBox">
+          <input type="hidden" id="strWidth" name="strWidth">
+          <input type="hidden" id="strHeight" name="strHeight">
+          <input type="hidden" id="strICoOrdinate" name="strICoOrdinate">
+          <input type="hidden" id="strJCoOrdinate" name="strJCoOrdinate">
+      </form>
+    </div>
+
+    <div class="row text-center justify-content-center">
+    {% if results %}
+        <h5>Results for {{ address }}</h5>
+        <div class="col-md-3">
+            <a href= "#" class="text-decoration-none" id="fibre_link"><div class="card custom-card">
+                <div class="card-body bg-danger text-white">
+                    <p class="h2">FIBRE</p>
+                    {{ results.fibre.strMessage }}
+                </div>
+            </div>
+        </div></a>
+        <div class="col-md-3">
+            <a href= "#mtn_packages" class="text-decoration-none" id="mtn_link" onclick="showMtnPackages()"><div class="card custom-card">
+                <div class="card-body bg-warning text-white">
+                    <p class="h2">MTN LTE</p>
+                    {{ results.mtn_lte.strMessage }}
+                </div>
+            </div></a>
+        </div>
+        <div class="col-md-3">
+            <a href= "#telkom_packages" class="text-decoration-none" id="telkom_link" onclick="showTelkomPackages()"><div class="card custom-card">
+                <div class="card-body bg-info text-white">
+                    <p class="h2">TELKOM LTE</p>
+                    {{ results.telkom_lte.strMessage }}
+                </div>
+            </div></a>
+        </div>
+    {% elif error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+</div>
+<div class="container-fluid intro">
+    <div class="row">
+        <div class="col-md-2 text-center">
+            <img src="{% static 'images/char1.png' %}" width=100% height=300>
+        </div> 
+        <div class="col-md-6 text-white">
+            <h1 class="headline">NDIO!!</h1>
+            <h3 class="slogan">FAST, FASTER, FASTEST</h3>
+            <h3 class="slogan">INTERNET</h3>
+            <h4 class="promo">SAY YES TO US</h4>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid" id="services">
+    <br><br>   
+    <div class="row telkom_info">
+        <div class="col-md-2 "><img src="{% static 'images/char3_3.png' %}" width=100% height=300></div>
+        <div class="col-md-8 text-center ">
+            <h1 class="service-heading">FAST FIBRE<h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 text-center ">
+            <h1 class="service-heading">MTN FIXED-LTE<h1><br>
+            <h3>We have the fastest mtn fixed-lte in the world. It would be a pitty if don't get it.
+                So do the right thing and GET IT.....NNOOOWWW!!!!</h3>
+        </div>
+        <div class="col-md-2"><img src="{% static 'images/char2_2.png' %}" width=100% height=300></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"><img src="{% static 'images/char1_1.png' %}" width=100% height=300></div>
+        <div class="col-md-8 text-center">
+            <h1 class="service-heading">TELKOM FIXED-LTE<h1>
+        </div>
+    </div>
+    <br><br>
+</div>
+
+
+<div class="container-fluid bg-dark stuff" >
+    <br><br>
+    <div id="telkom_packages" class="container">
+        <div class="product-container">
+            <h1>Our TELKOM LTE Packages</h1>
+            <strong><p>Choose the perfect package for your needs and enjoy fast, reliable internet with no hassle!</p></strong>
+            <div class="product-grid row">
+                <div class="product-card">
+                    <div class="product-header" >Telkom Mobile Off-Peak Uncapped Smart Combo</div>
+                    <p class="speed"></p>
+                    <div class="price-container">
+                        <p class="old-price">R549<span>/pm</span></p>
+                        <p class="new-price">R399<span>/pm</span></p>
+                    </div>
+                    <a id="{{telkom_products.0}}" href="{% url 'referral_home' ref_code=request.session.referral_code %}?selected_product={{ telkom_products.0 }}">
+                        <button class="btn">Get this Plan</button>
+                    </a>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-header">Telkom Mobile 10Mbps Uncapped Smart Combo</div>
+                    <p class="speed"></p>
+                    <div class="price-container">
+                        <p class="old-price">R749<span>/pm</span></p>
+                        <p class="new-price">R599<span>/pm</span></p>
+                    </div>
+                    <a  id="{{telkom_products.1}}"  href="{% url 'referral_home' ref_code=request.session.referral_code %}?selected_product={{ telkom_products.1 }}">
+                        <button class="btn">Get this Plan</button>    
+                    </a>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-header">Telkom Mobile 20Mbps Uncapped Smart Combo</div>
+                    <p class="speed"></p>
+                    <div class="price-container">
+                        <p class="old-price">R999<span>/pm</span></p>
+                        <p class="new-price">R799<span>/pm</span></p>
+                    </div>
+                    <a  id="{{ telkom_products.2 }}" href="{% url 'referral_home' ref_code=request.session.referral_code %}?selected_product={{ telkom_products.2 }}">
+                        <button class="btn">Get this Plan</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div><br><br>
+
+    <div>
+    <div id="mtn_packages" class="container">
+        <div class="product-container">
+            <h1>Our MTN LTE Packages</h1>
+            <strong><p>Choose the perfect package for your needs and enjoy fast, reliable internet with no hassle!</p></strong>
+            <div class="product-grid row">
+                <div class="product-card">
+                    <div class="product-header">MTN LTE 10Mbps Uncapped Smart Combo</div>
+                    <p class="speed"></p>
+                    <div class="price-container">
+                        <p class="old-price">R549<span>/pm</span></p>
+                        <p class="new-price">R399<span>/pm</span></p>
+                    </div>
+                    <a id="{{ mtn_products.0 }}" href="{% url 'referral_home' ref_code=request.session.referral_code %}?selected_product={{ mtn_products.0 }}">
+                        <button class="btn">Get this Plan</button>
+                    </a>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-header">MTN LTE 20Mbps Uncapped Smart Combo</div>
+                    <p class="speed"></p>
+                    <div class="price-container">
+                        <p class="old-price">R749<span>/pm</span></p>
+                        <p class="new-price">R599<span>/pm</span></p>
+                    </div>
+                    <a  id="{{ mtn_products.1 }}"  href="{% url 'referral_home' ref_code=request.session.referral_code %}?selected_product={{ mtn_products.1 }}">
+                        <button class="btn">Get this Plan</button>
+                    </a>
+                </div>
+                
+                <div class="product-card" data-details="High-speed internet up to 50 Mbps, Unlimited data, Free installation, Two-year plan" onclick="showDetails(this)">
+                    <div class="product-header">MTN LTE 50Mbps Uncapped Smart Combo</div>
+                    <p class="speed"></p>
+                    <div class="price-container">
+                        <p class="old-price">R999<span>/pm</span></p>
+                        <p class="new-price">R799<span>/pm</span></p>
+                    </div>
+                    <a  id="{{ mtn_products.2 }}" href="{% url 'referral_home' ref_code=request.session.referral_code %}?selected_product={{ mtn_products.2 }}">
+                        <button class="btn">Get this Plan</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div><hr class="color-white">
+
+<br><br><br>
+<button onclick="topFunction()" id="topButton" tite="Go to top"> <i class="bi bi-chevron-double-up h3"></i> Back to top</button>
+<footer class="bg-dark text-light py-5">
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- Company Information -->
+            <div class="col-md-4 mb-4">
+                <a class="navbar-brand" style="color: black" href="/"><img src="{% static 'images/ndio_logo.png' %}" width=200 height=100></a>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="col-md-4 mb-4">
+                <b><h5 class="text-uppercase">Contact Us</h5></b>
+                <ul class="list-unstyled">
+                    <li><i class="bi bi-telephone"></i> Phone: +27 123 456 789</li>
+                    <li><i class="bi bi-envelope"></i> Email: support@ndio.com</li>
+                    <i class="bi bi-geo-alt"></i> Address: 123 Connection Blvd, Johannesburg, South Africa</li>
+                </ul>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="col-md-2 mb-2">
+                <b><h5 class="text-uppercase">Quick Links</h5></b>
+                <ul class="list-unstyled">
+                    <li><a href="/about" class="text-light text-decoration-none">About Us</a></li>
+                    <li><a href="/services" class="text-light text-decoration-none">Our Services</a></li>
+                    <li><a href="/packages" class="text-light text-decoration-none">Packages</a></li>
+                    <li><a href="/contact" class="text-light text-decoration-none">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <hr class="bg-secondary">
+
+        <!-- Social Media Links -->
+        <div class="row">
+            <div class="col text-center">
+                <b><h5 class="text-uppercase">Follow Us</h5></b>
+                <a href="https://facebook.com/ndio" class="text-light mx-2"><i class="bi bi-facebook"></i></a>
+                <a href="https://twitter.com/ndio" class="text-light mx-2"><i class="bi bi-twitter-x"></i></a>
+                <a href="https://instagram.com/ndio" class="text-light mx-2"><i class="bi bi-instagram"></i></a>
+                <a href="https://linkedin.com/company/ndio" class="text-light mx-2"><i class="bi bi-linkedin"></i></a>
+            </div>
+        </div>
+
+        <hr class="bg-secondary">
+
+        <!-- Copyright -->
+        <div class="row">
+            <div class="col text-center">
+                <p class="mb-0">&copy; 2025 NDIO. All rights reserved. | <a href="/privacy-policy" class="text-light text-decoration-none">Privacy Policy</a></p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <script>
+        function showTelkomPackages() {
+            var x = document.getElementById("telkom_packages");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "block"
+            }
+        }
+
+        function showMtnPackages() {
+            var x = document.getElementById("mtn_packages");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "block"
+            }
+        }
+
+        //Dont forget to add showFibre function
+
+
+        //Scroll back to top button
+        let button = document.getElementById("topButton");
+
+        //when the user scrolls down 20px from top, show button
+        window.onscroll = function() {scrollFrunction()};
+
+        function scrollFrunction() {
+            if (document.body.scrollTop > 20 ||
+        document.documentElement.scrollTop > 20) {
+            topButton.style.display = "block";
+         }  else {
+            topButton.style.display = "none";
+         }
+        }
+
+        //When the user clicks on the button, scroll to the top of page
+        function topFunction() {
+            document.documentElement.scrollTop = 0; 
+        }
+    </script>
+
+</body>
+
+</html>
