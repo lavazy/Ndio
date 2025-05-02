@@ -15,9 +15,11 @@ import requests
 
 # Create your views here.
 def get_session():
-    """ This function creates an API session, allowing
+    """ 
+        This function creates an API session, allowing
         us to interact with the API for 1 hour. And
-        we can request another one after 1 hour. """
+        we can request another one after 1 hour. 
+    """
 
     url = "https://apitest.axxess.co.za/calls/rsapi/getSession.json?strUserName=KAB149&strPassword=cW3j*-NUmKG~$5!"
     username = "ResellerAdmin"
@@ -34,9 +36,18 @@ def get_session():
         return None
 
 def get_coordinates(address):
-    
-    """Converts a user's address into latitude and longitude using the Google Maps API."""
-    
+    """
+    Converts a physical address into geographical coordinates (latitude and longitude)
+    using the Google Maps Geocoding API.
+
+    Parameters:
+        address (str): The physical address to geocode.
+
+    Returns:
+        tuple: A tuple containing (latitude, longitude) if successful,
+               otherwise (None, None) if the API request fails.
+    """
+   
     # Dont forget to hide this
     google_maps_api_key = "AIzaSyDvsvOuUIWak9axNX97yBDoa0oKm_f1suY"
     url = f"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={google_maps_api_key}"
@@ -51,11 +62,16 @@ def get_coordinates(address):
 
 # Check if fibre is available in that area
 def check_fibre_availability(address):
-    """This function checks if fibre is available in the user's address.
-        It accepts 1 parameters: 
-        - address of the user (str)
+    """
+    Checks for fibre availability at the specified address using the Axxess API.
 
-        And it returns a list of available network providers for that area"""
+    Parameters:
+        address (str): The user's physical address.
+
+    Returns:
+        list: A list of available network provider IDs for the area if the request is successful,
+              otherwise None.
+    """
 
     providers_list = []    # Initialize list of prviders
     session_id = get_session()
@@ -88,6 +104,17 @@ def check_fibre_availability(address):
 
 # Get the network provider products
 def get_network_provider_products(address):
+    """
+    Retrieves a list of fibre products offered by available network providers at the given address.
+
+    Parameters:
+        address (str): The physical address to check for available fibre products.
+
+    Returns:
+        list: A list of product dictionaries from all available network providers if found,
+              otherwise None.
+    """
+
     network_providers_list = check_fibre_availability(address=address)
     products_list = []  # Initialize empty list of responses
  
@@ -110,6 +137,24 @@ def get_network_provider_products(address):
         return None
     
 def home(request):
+    """
+    Handles the display and logic for the home page where users can check fibre availability.
+
+    This view accepts a POST request with an address submitted by the user, clears any existing session,
+    and checks whether fibre is available at that address by:
+        - Retrieving a list of available network providers.
+        - Fetching fibre products offered by those providers.
+        - Storing the address in the session for use in other views.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object, which may contain a POST address field.
+
+    Returns:
+        HttpResponse: Renders the 'ndio_app/home.html' template with a context dictionary containing:
+            - 'products': A list of available fibre products (empty if unavailable).
+            - 'fibre_is_available': A boolean indicating whether fibre is available.
+            - 'address': The user's submitted address.
+    """
     request.session.flush()
     context={}
     network_provider_products_list = []
@@ -138,7 +183,27 @@ def home(request):
     return render(request, "ndio_app/home.html", context=context)
         
 def referral_home(request, ref_code=None):
-    """Home view with referral tracking."""
+    """
+    Handles the referral landing page view where users can check fibre availability
+    while optionally tracking referral codes passed through the URL.
+
+    This view:
+        - Checks for a referral code in the URL and verifies it against the database.
+        - Stores the referrer’s ID and code in the session if valid.
+        - Accepts an address via POST to check fibre availability.
+        - Retrieves products from available network providers.
+        - Stores the address in the session.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object, possibly containing POST data.
+        ref_code (str, optional): The referral code passed via the URL.
+
+    Returns:
+        HttpResponse: Renders 'home_referral.html' with context containing:
+            - 'products': List of fibre products from providers (if any).
+            - 'fibre_is_available': Boolean indicating availability.
+            - 'address': User-submitted address.
+    """
     # Use ref_code from URL if provided
     print(request.session.items())
     request.session.flush()
@@ -184,21 +249,29 @@ def referral_home(request, ref_code=None):
     return render(request, "ndio_app/home_referral.html", context=context)
 
 def create_client(first_name, last_name, email, client_password, id_number, address, city, postal_code, suburb, province_id):
-    """ 
-    This function creates a user on the api end
-    using the information retrieved from a form. 
-    It accepts the following parameters:
-        - SessionId 
-        - strName
-        - strLastName
-        - strEmail
-        - strPassword
-        - strIdNumber
-        - strAddress
-        - strSuburb
-        - strCity
-        - intPostalCode 
-        """
+    """
+    Creates a new client on the Axxess API using the provided user information.
+
+    This function sends a PUT request to the API with the required client details.
+    It first obtains a session ID and then authenticates using predefined credentials.
+    If the request is successful (status code 201), it returns the newly created client's unique ID.
+
+    Parameters:
+        first_name (str): The client's first name.
+        last_name (str): The client's last name.
+        email (str): The client's email address.
+        client_password (str): The client's password.
+        id_number (str): The client's ID or national identification number.
+        address (str): The client's street address.
+        city (str): The city where the client resides.
+        postal_code (int): The postal code of the client's area.
+        suburb (str): The suburb or local area name.
+        province_id (int or str): The numeric ID of the province (must be castable to int).
+
+    Returns:
+        str or None: The newly created client's unique GUID if the request is successful;
+                     otherwise, prints an error message and returns None.
+    """
     
     # Get session ID before interacting with API 
     session_id = get_session()
@@ -228,8 +301,6 @@ def create_client(first_name, last_name, email, client_password, id_number, addr
     else:
         print("User not created")
 
-import os
-import requests
 
 def create_fibre_service(
     session_id, client_id, product_id, network_provider_id, owner, cellphone_number, address, 
@@ -310,6 +381,26 @@ def create_fibre_service(
 
 
 def register_view(request):
+    """
+    Handles user registration via a custom Django form and manages session data.
+
+    This view retrieves a fibre product ID from the query string and stores it in the session.
+    When the form is submitted (POST request), it attempts to create a new user account using the
+    `CustomUserCreationForm`. If successful, the user is logged in immediately and redirected to the 
+    order details page. If the form is invalid, appropriate error messages are displayed.
+
+    On GET requests, the registration form is displayed to the user.
+
+    Session Data:
+        - "fibre_product": Stores the selected product ID from the GET request.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: Renders the registration page with the form, or redirects on successful registration.
+    """
+
     # Getting the product ID
     fibre_product = request.GET.get("product_id")
     request.session["fibre_product"] = fibre_product
@@ -322,7 +413,6 @@ def register_view(request):
         if form.is_valid():
             user = form.save(commit=False)
             messages.success(request, "Account created successfuly")
-            request.session['password'] = user.password
             user.save()
             login(request, user)  # Log in the user immediately
             return redirect('order_details')  # Redirect to the desired page
@@ -334,6 +424,22 @@ def register_view(request):
     return render(request, 'accounts/register.html', {'form': form})
 
 def login_view(request):
+    """
+    Authenticates and logs in a user using Django's built-in AuthenticationForm.
+
+    On a POST request, this view processes the submitted login form. If the form is valid,
+    the user is authenticated and logged in using Django's `login()` function, then redirected
+    to the user account page.
+
+    On a GET request, the view simply displays the login form to the user.
+
+    Parameters:
+        request (HttpRequest): The incoming HTTP request.
+
+    Returns:
+        HttpResponse: Renders the login page with the authentication form, or redirects
+                      to the 'user_account' page on successful login.
+    """
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
@@ -345,6 +451,22 @@ def login_view(request):
     return render(request, 'accounts/login.html', {'form': form})
 
 def login_view_order(request):
+    """
+    Authenticates and logs in a user using Django's built-in AuthenticationForm.
+
+    On a POST request, this view processes the submitted login form. If the form is valid,
+    the user is authenticated and logged in using Django's `login()` function, then redirected
+    to the user account page.
+
+    On a GET request, the view simply displays the login form to the user.
+
+    Parameters:
+        request (HttpRequest): The incoming HTTP request.
+
+    Returns:
+        HttpResponse: Renders the login page with the authentication form, or redirects
+                      to the 'order_details' page on successful login.
+    """
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
@@ -355,36 +477,105 @@ def login_view_order(request):
         form = AuthenticationForm()
     return render(request, 'accounts/login_order.html', {'form': form})
 
-def logout_view(request):   
+def logout_view(request):
+    """
+    Logs out the currently authenticated user and clears the session.
+
+    This view uses Django's built-in `logout()` function to terminate the user's session.
+    It then explicitly flushes the session to remove any remaining session data, such as
+    stored form inputs or temporary identifiers, and redirects the user to the home page.
+
+    Parameters:
+        request (HttpRequest): The incoming HTTP request.
+
+    Returns:
+        HttpResponseRedirect: Redirects the user to the homepage after logout.
+    """  
     logout(request)
     request.session.flush() # clear session
     return redirect('home')  # Redirect to the home page after logout
 
 def lte_view(request):
-    #items = get_products()
+    """
+    Renders the LTE page of the NDIO web application.
+
+    This view simply returns the LTE information template when the route is accessed.
+    It does not require any context data and serves as a static informational or marketing page.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: Renders the 'lte.html' template within the 'ndio_app' directory.
+    """
     return render(request, 'ndio_app/lte.html', {})
 
 def about_us(request):
+    """
+    Renders the 'About Us' page of the NDIO web application.
+
+    This view displays static information about the organization, its mission, and team.
+    It does not require any dynamic context data and simply loads the corresponding template.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: Renders the 'about_us.html' template from the 'ndio_app' directory.
+    """
     return render(request, 'ndio_app/about_us.html')
 
 def switch(request):
+    """
+    Renders the 'Switch' page of the NDIO web application.
+
+    This view displays a static informational page that explains how users can switch
+    their internet service provider to NDIO. It does not require any dynamic data and 
+    simply serves the corresponding HTML template.
+
+    Parameters:
+        request (HttpRequest): The incoming HTTP request.
+
+    Returns:
+        HttpResponse: Renders the 'switch.html' template from the 'ndio_app' directory.
+    """
     return render(request, 'ndio_app/switch.html')
 
 def faqs(request):
+    """
+    Renders the Frequently Asked Questions (FAQs) page of the NDIO web application.
+
+    This view queries all FAQ entries from the database and passes them to the template
+    for display. It enables users to browse common questions and answers related to 
+    NDIO's services.
+
+    Parameters:
+        request (HttpRequest): The incoming HTTP request.
+
+    Returns:
+        HttpResponse: Renders the 'faqs.html' template with a context containing all FAQ objects.
+    """
     faq = FAQ.objects.all()
     context = {
-        "faqs" : faq
-    } 
+        "faqs": faq
+    }
     return render(request, 'ndio_app/faqs.html', context=context)
 
 def packages(request):
     """
-    This function returns all the packages from the 
-    database for specific netwwork providers and renders
-    them to the template.
-    """
+    Renders the Packages page of the NDIO web application.
 
-    # Get the network provider
+    This view retrieves all available network providers from the database, 
+    which may be used to display related fibre or LTE packages in the frontend. 
+    The provider data is passed to the template for dynamic rendering.
+
+    Parameters:
+        request (HttpRequest): The incoming HTTP request.
+
+    Returns:
+        HttpResponse: Renders the 'packages.html' template with context containing 
+                      all network provider objects.
+    """
     providers = NetworkProvider.objects.all()
     context = {
         "providers": providers
@@ -392,9 +583,41 @@ def packages(request):
     return render(request, 'ndio_app/packages.html', context=context)
 
 def home_fibre(request):
+    """
+    Renders the Home Fibre information page of the NDIO web application.
+
+    This view serves a static page that provides users with information about 
+    NDIO's home fibre services, including features, benefits, and how to get started.
+    No dynamic data is passed to the template.
+
+    Parameters:
+        request (HttpRequest): The incoming HTTP request.
+
+    Returns:
+        HttpResponse: Renders the 'fibre.html' template from the 'ndio_app' directory.
+    """
     return render(request, 'ndio_app/fibre.html')
 
+
 def business_fibre(request):
+    """
+    Handles the Business Fibre service page and checks fibre availability for a given address.
+
+    This view allows users to input a business address via POST request to check for 
+    fibre availability. If available, it fetches a list of network provider products 
+    for that address and displays them on the page. If fibre is not available, 
+    it notifies the user accordingly.
+
+    Parameters:
+        request (HttpRequest): The incoming HTTP request. Expects POST data containing
+                               an 'address' field for fibre availability lookup.
+
+    Returns:
+        HttpResponse: Renders the 'business_fibre.html' template with a context dictionary that includes:
+                      - 'products': a list of available network provider products (if any),
+                      - 'fibre_is_available': a boolean indicating if fibre is available,
+                      - 'address': the submitted address.
+    """
     context={}
     network_provider_products_list = []
     if request.method == "POST":
@@ -423,28 +646,72 @@ def business_fibre(request):
 
 
 def voip(request):
-    
+    """
+    Handles the VoIP service page and processes service inquiry form submissions.
+
+    This view supports both GET and POST requests. On a GET request, it simply renders the VoIP 
+    information page. On a POST request, it captures user-submitted details from the VoIP inquiry 
+    form, including personal, company, and service-related information, and stores it in the 
+    `ServicesContact` database model.
+
+    Parameters:
+        request (HttpRequest): The incoming HTTP request. If POST, expects the following fields:
+            - name (str): The user's first name.
+            - surname (str): The user's last name.
+            - email (str): The user's email address.
+            - address (str): The physical address of the user or company.
+            - company (str): The name of the company (if applicable).
+            - requirements (str): Description of service requirements or needs.
+            - service (str): The specific VoIP service being requested.
+
+    Returns:
+        HttpResponse: Renders the 'voip.html' template whether it is a GET or POST request. 
+                      On POST, the user details are saved and the page is refreshed.
+    """
     if request.method == "POST":
-        name  = request.POST.get("name")
+        name = request.POST.get("name")
         surname = request.POST.get("surname")
         email = request.POST.get("email")
         address = request.POST.get("address")
         company_name = request.POST.get("company")
         description = request.POST.get("requirements")
         service = request.POST.get("service")
+
         ServicesContact.objects.create(
-            name = name,
-            surname = surname,
-            email = email,
-            address = address,
-            company_name = company_name,
-            description = description,
-            service = service
+            name=name,
+            surname=surname,
+            email=email,
+            address=address,
+            company_name=company_name,
+            description=description,
+            service=service
         )
         return render(request, 'ndio_app/voip.html')
-    return render(request, 'ndio_app/voip.html')  
+    return render(request, 'ndio_app/voip.html')
 
 def wireless(request):
+    """
+    Handles the wireless service inquiry page and processes form submissions.
+
+    This view manages both GET and POST HTTP methods. On a GET request, it simply renders the 
+    wireless service page. On a POST request, it collects customer-provided information from 
+    the form—such as personal details, service requirements, and company information—and stores 
+    it in the `ServicesContact` model for follow-up or processing.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object. If it's a POST request, it should include:
+            - name (str): The user's first name.
+            - surname (str): The user's last name.
+            - address (str): Installation or contact address.
+            - email (str): The user's email address.
+            - company (str): The company name, if applicable.
+            - requirements (str): Description of the user's wireless service needs.
+            - service (str): Type of service selected (e.g., wireless broadband, etc.).
+
+    Returns:
+        HttpResponse: Renders the 'wireless.html' template whether on GET or POST. 
+                      On successful POST, the data is saved and the same page is returned.
+    """
     if request.method == "POST":
         name = request.POST.get("name")
         surname = request.POST.get("surname")
@@ -453,20 +720,44 @@ def wireless(request):
         company_name = request.POST.get("company")
         description = request.POST.get("requirements")
         service = request.POST.get("service")
+
         ServicesContact.objects.create(
-            name = name,
-            surname = surname,
-            address = address,
-            email = email,
-            company_name = company_name,
-            description = description,
-            service = service
+            name=name,
+            surname=surname,
+            address=address,
+            email=email,
+            company_name=company_name,
+            description=description,
+            service=service
         )
         return render(request, 'ndio_app/wireless.html')
     
-    return render(request, 'ndio_app/wireless.html')  
+    return render(request, 'ndio_app/wireless.html')
+
 
 def network_cabling(request):
+    """
+    Handles the network cabling service inquiry page and processes form submissions.
+
+    This view manages both GET and POST HTTP methods. On a GET request, it simply renders the 
+    network cabling service page. On a POST request, it collects customer-provided information from 
+    the form—such as personal details, service requirements, and company information—and stores 
+    it in the `ServicesContact` model for follow-up or processing.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object. If it's a POST request, it should include:
+            - name (str): The user's first name.
+            - surname (str): The user's last name.
+            - address (str): Installation or contact address.
+            - email (str): The user's email address.
+            - company (str): The company name, if applicable.
+            - requirements (str): Description of the user's wireless service needs.
+            - service (str): Type of service selected (e.g., wireless broadband, etc.).
+
+    Returns:
+        HttpResponse: Renders the 'network_cabling.html' template whether on GET or POST. 
+                      On successful POST, the data is saved and the same page is returned.
+    """
     if request.method == "POST":
         name = request.POST.get("name")
         surname = request.POST.get("surname")
@@ -489,13 +780,24 @@ def network_cabling(request):
     return render(request, 'ndio_app/network_cabling.html')
 
 def managed(request):
+    """
+    Handles the managed services inquiry page.
+    This view manages, on a GET request, to simply render the 
+    managed services page.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object. If it's a POST request, it should include:
+
+    Returns:
+        HttpResponse: Renders the 'managed.html' template whether on GET. 
+    """
     return render(request, 'ndio_app/managed.html')
 
 def privacy_policy(request):
     return render(request, 'ndio_app/privacy_policy.html')
 
 def order_details(request):
-    """Handles order details submission."""
+    """Handles the order details page and process form submission."""
     referrer_id = request.session.get('referrer')
     referrer = User.objects.get(id=referrer_id) if referrer_id else None
 
