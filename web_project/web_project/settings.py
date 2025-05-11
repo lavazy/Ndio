@@ -150,6 +150,10 @@ GOOGLE_API_KEY = "AIzaSyDvsvOuUIWak9axNX97yBDoa0oKm_f1suY"
 YOCO_PUBLIC_KEY = "pk_test_95a46073bZzMMRy30254"
 YOCO_SECRET_KEY = "sk_test_b046039cNmAYYrp67b64f42ad0bb"
 
+# ======= YOCO LIVE KEYS ========
+YOCO_LIVE_PK = "pk_live_326cd342bZzMMRy9aa44"
+YOCO_LIVE_SK = "sk_live_00ad66d3NmAYYrp28ec45409da66"
+
 # SMTP Configurationd
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'smtp.office365.com'

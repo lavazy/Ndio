@@ -799,6 +799,7 @@ def privacy_policy(request):
 def order_details(request):
     """Handles the order details page and process form submission."""
     referrer_id = request.session.get('referrer')
+    fibre_product_id = request.session.get('fibre_product')
     referrer = User.objects.get(id=referrer_id) if referrer_id else None
 
     if request.method == "POST":
@@ -806,47 +807,46 @@ def order_details(request):
         form_order = forms.OrderForm(request.POST)
 
         if form.is_valid() and form_order.is_valid():
+            # Check if user already has a UserDetail
+            try:
+                existing_detail = request.user.user_details
+                form = forms.UserDetailForm(request.POST, instance=existing_detail)
+                client = form.save(commit=False)
+            except UserDetail.DoesNotExist:
+                client = form.save(commit=False)
+                client.user = request.user
+                client.referred_by = referrer
 
-            client = form.save(commit=False)
-            client.user = request.user
-            client.referred_by = referrer  
-            client_first_name = (client.first_name)
-            client_last_name = (client.last_name)
-            client_cell_number = client.phone_number
+            # Set static values
             client_email = "client@ndio.co.za"
-            # Add client phone
             client_password = request.session.get("password")
             client_id_number = client.id_number
-            
-            client.save()  
 
+            client.save()
+
+            # Create order
             order = form_order.save(commit=False)
-            order.client = request.user  # Assign client
-            # Get data needed for createclient func
+            order.client = request.user
+            order.save()
+
+            # Prepare data for Axxess
+            client_first_name = client.first_name
+            client_last_name = client.last_name
+            client_cell_number = client.phone_number
             client_address = order.address
             client_city = order.city
             postal_code = order.postal_code
             suburb = order.suburb
             province = order.province
             client_address_type = order.address_type
-            client
-            
-            province_codes = {
-                "Eastern Cape": 1,
-                "Free State":2,
-                "Gauteng":3,
-                "Kwazulu-Natal":4,
-                "Mpumalanga":5,
-                "Northern Cape":6,
-                "Limpopo":7,
-                "North West Province":8,
-                "Western Cape":9,
-                "Other":0,
-            }
 
-            for provinces in province_codes:
-                if province == provinces:
-                    province_id = province_codes[provinces]
+            # Map province to ID
+            province_codes = {
+                "Eastern Cape": 1, "Free State": 2, "Gauteng": 3,
+                "Kwazulu-Natal": 4, "Mpumalanga": 5, "Northern Cape": 6,
+                "Limpopo": 7, "North West Province": 8, "Western Cape": 9, "Other": 0,
+            }
+            province_id = province_codes.get(province, 0)
 
             client_id = create_client(
                 client_first_name,
@@ -857,29 +857,25 @@ def order_details(request):
                 client_address,
                 client_city,
                 postal_code,
-                suburb, 
+                suburb,
                 province_id
-                )
-            print(f"From the variable(CLIENT ID ON AXXESS!!):{client_id}")
-            fibre_product_id = request.session.get("fibre_product")
+            )
 
-            if fibre_product_id:
-                product = FibreProduct.objects.filter(product_id=fibre_product_id).first()
-                network_provider = product.network_provider
-                print(network_provider)
-
+            # Product and network details
+            product = FibreProduct.objects.filter(product_id=fibre_product_id).first()
+            network_provider = product.network_provider
             network = NetworkProvider.objects.filter(name=network_provider).first()
             network_provider_id = network.guid_network_provider_id
-            print(f"Network providerId: {network_provider_id}")
-            print(f"Coordinates: {get_coordinates(client_address)}")
 
-            house_number = client_address.split(" ")[0]
-            floor_number =0
+            # Address parsing
+            address_parts = client_address.split(" ")
+            house_number = address_parts[0] if address_parts else "0"
+            block_name = address_parts[1] if len(address_parts) > 1 else ""
+            floor_number = 0
             apartment_number = 0
-            print(f"product_ID: {fibre_product_id}")
-            block_name = client_address.split(" ")[1]
+
             create_fibre_service(
-                session_id = get_session(),
+                session_id=get_session(),
                 client_id=client_id,
                 product_id=fibre_product_id,
                 network_provider_id=network_provider_id,
@@ -891,34 +887,34 @@ def order_details(request):
                 building_number=house_number,
                 suburb=suburb,
                 city=client_city,
-                coordinates = get_coordinates(client_address),
+                coordinates=get_coordinates(client_address),
                 unit_number=apartment_number,
                 floor_number=floor_number,
-                block_name=block_name),
-            order.save()
+                block_name=block_name
+            )
 
-            context = {
-                "product" : product
-            }
-            return redirect("payment_view", context=context)
+            return redirect("payment_view")
 
         else:
             print("User Detail Form Errors:", form.errors)
             print("Order Form Errors:", form_order.errors)
 
     else:
-        # GET request - Prefill form
+        # Prefill for GET
         address = request.session.get('address', '')
         address_split = address.split(', ') if address else [""] * 4
         city = address_split[2] if len(address_split) > 2 else ""
 
         order_initial_data = {'address': address, 'city': city}
-        user_detail_intial_data = {'referred_by': referrer}
 
-        form = forms.UserDetailForm(initial=user_detail_intial_data)
+        try:
+            existing_detail = request.user.user_details
+            form = forms.UserDetailForm(instance=existing_detail)
+        except UserDetail.DoesNotExist:
+            user_detail_initial_data = {'referred_by': referrer}
+            form = forms.UserDetailForm(initial=user_detail_initial_data)
+
         form_order = forms.OrderForm(initial=order_initial_data)
-
-        print(f"Preloading Forms: {form.errors}, {form_order.errors}")
 
     return render(request, 'ndio_app/order_details.html', {'form': form, 'form_order': form_order})
     
@@ -963,7 +959,7 @@ def process_payment(request):
 
             url = "https://payments.yoco.com/api/checkouts"
             headers = {
-                'Authorization': f'Bearer {settings.YOCO_SECRET_KEY}',
+                'Authorization': f'Bearer {settings.YOCO_LIVE_SK}',
                 'Content-Type': 'application/json'
             }
             
@@ -994,7 +990,7 @@ def process_payment(request):
 
                 return JsonResponse({'status': 'success', 'message': 'Payment initiated but no redirect URL received'})
             else:
-                return redirect('unsuccessful')
+                return redirect('unsuccessful_payment')
 
         else:
             return JsonResponse({'status': 'error', 'message': 'Invalid form data', 'errors': form.errors})
@@ -1018,7 +1014,7 @@ def payment_view(request):
     total_price = product_price + 300
 
     # Yoco Public Key
-    public_key = settings.YOCO_PUBLIC_KEY
+    public_key = settings.YOCO_LIVE_PK
 
     # Create an unbound form with initial data (DO NOT call is_valid() or save())
     form = PaymentForm(initial={'amount': total_price})
@@ -1026,7 +1022,7 @@ def payment_view(request):
     context = {
         'yoco_public_key': public_key,
         'currency': 'ZAR',
-        'product_name': product.product_name,  # Use product.name instead of the whole object
+        'product_name': product.product_name,
         'product_price': product_price,
         'form': form,
         'amount': total_price
