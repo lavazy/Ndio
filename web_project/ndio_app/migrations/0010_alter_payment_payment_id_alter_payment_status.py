@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ndio_app', '0009_remove_payment_currency'),
+        ("ndio_app", "0009_remove_payment_currency"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='payment',
-            name='payment_id',
+            model_name="payment",
+            name="payment_id",
             field=models.CharField(max_length=50),
         ),
         migrations.AlterField(
-            model_name='payment',
-            name='status',
+            model_name="payment",
+            name="status",
             field=models.CharField(max_length=20),
         ),
     ]

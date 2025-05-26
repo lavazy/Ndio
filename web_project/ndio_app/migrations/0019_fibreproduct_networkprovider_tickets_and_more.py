@@ -179,9 +179,7 @@ class Migration(migrations.Migration):
                 ("last_name", models.CharField(max_length=30)),
                 (
                     "phone_number",
-                    models.CharField(
-                        max_length=10, unique=True
-                    ),
+                    models.CharField(max_length=10, unique=True),
                 ),
                 ("id_number", models.CharField(max_length=15, unique=True)),
                 (

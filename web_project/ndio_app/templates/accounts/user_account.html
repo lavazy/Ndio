@@ -425,7 +425,7 @@
                 </div>
                 <div class="col-md-4 text-md-end mt-3 mt-md-0">
                     <div class="greeting fs-4">
-                        <i class="bi bi-sun-fill me-2"></i>GOOD AFTERNOON, {{ user.username|upper }}
+                        <i class="bi bi-sun-fill me-2"></i>WELCOME, {{ user.username|upper }}
                     </div>
                 </div>
             </div>
@@ -449,9 +449,9 @@
                     <div class="col-md-6">
                         <div class="info-box">
                             <h5>AMOUNT DUE</h5>
-                            <p class="amount">R349.00</p>
+                            <p class="amount">R{{ product_price }}</p>
                             <p class="text-muted">Due by: 15th of each month</p>
-                            <button class="btn btn-primary btn-sm"><i class="bi bi-credit-card me-1"></i> Pay Now</button>
+                            <a href="{% url 'monthly_payments' %}"> <button class="btn btn-primary btn-sm"><i class="bi bi-credit-card me-1"></i> Pay Now</button></a>
                         </div>
                     </div>
                 </div>
@@ -693,7 +693,7 @@
                     <div class="card-body text-center">
                         <h5 class="mb-3" style="color: var(--primary-orange);">NO FUSS SWITCH-A-ROOS!</h5>
                         <p>Switch to us and we'll handle everything - no downtime, no hassle!</p>
-                        <button class="btn btn-primary btn-sm">Learn More</button>
+                        <a href="{% url 'switch' %}"></a><button class="btn btn-primary btn-sm">Learn More</button>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment | NDIO</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
+  <style>
+    :root {
+      --primary-green: #2e7d32;
+      --light-green: #4caf50;
+      --dark-green: #1b5e20;
+      --primary-orange: #ff6d00;
+      --light-orange: #ff9100;
+      --dark-orange: #e65100;
+      --gradient-bg: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .payment-container {
+      max-width: 800px;
+      margin: 30px auto;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+      flex: 1;
+    }
+    
+    .payment-header {
+      background: var(--gradient-bg);
+      color: white;
+      padding: 25px;
+      text-align: center;
+    }
+    
+    .payment-header h2 {
+      font-weight: 700;
+      margin-bottom: 0;
+    }
+    
+    .payment-body {
+      background: white;
+      padding: 30px;
+    }
+    
+    .form-label {
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: #555;
+    }
+    
+    .form-control {
+      padding: 12px 15px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+      border-color: var(--primary-green);
+      box-shadow: 0 0 0 0.25rem rgba(46, 125, 50, 0.25);
+    }
+    
+    .btn-pay {
+      background-color: var(--primary-orange);
+      border-color: var(--primary-orange);
+      padding: 12px 25px;
+      font-weight: 500;
+      border-radius: 6px;
+      transition: all 0.3s;
+      color: white;
+      width: 100%;
+    }
+    
+    .btn-pay:hover {
+      background-color: var(--dark-orange);
+      border-color: var(--dark-orange);
+      transform: translateY(-2px);
+      color: white;
+    }
+    
+    .btn-change {
+      background-color: var(--primary-green);
+      border-color: var(--primary-green);
+      color: white;
+      font-size: 14px;
+      padding: 5px 10px;
+    }
+    
+    .btn-change:hover {
+      background-color: var(--dark-green);
+      border-color: var(--dark-green);
+      color: white;
+    }
+    
+    .product-info {
+      background-color: #f8f9fa;
+      border-left: 4px solid var(--primary-orange);
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .product-info strong {
+      color: var(--dark-green);
+      font-size: 1.1rem;
+    }
+    
+    .total-amount {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary-green);
+      text-align: right;
+      margin: 20px 0;
+    }
+    
+    hr {
+      margin: 25px 0;
+      opacity: 0.2;
+    }
+    
+    footer {
+      background: #212529;
+      color: white;
+      padding: 20px 0;
+      margin-top: auto;
+    }
+    
+    /* Loading animation/overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    
+    .loading-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .loading-content {
+      text-align: center;
+      color: white;
+    }
+    
+    .loading-text {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: var(--primary-green);
+    }
+    
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--primary-orange);
+      animation: spin 1s ease-in-out infinite;
+      margin: 0 auto;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    @media (max-width: 768px) {
+      .payment-container {
+        margin: 15px;
+      }
+      
+      .payment-body {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Animation -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <strong><p class="loading-text">Processing Payment...</p></strong>
+    </div>
+  </div>
+
+  <div class="container my-5">
+    <div class="payment-container">
+      <div class="payment-header">
+        <h2><i class="bi bi-credit-card me-2"></i> COMPLETE YOUR PAYMENT</h2>
+        <p class="mb-0">Secure checkout with our trusted payment gateway</p>
+      </div>
+      
+      <div class="payment-body">
+        <p class="mb-3">You are paying for:</p>
+        <div class="product-info">
+          <div><strong>{{ product_name }}</strong></div>
+        </div>
+
+        <form id="paymentForm" method="post" action="{% url 'process_payment' %}">
+          {% csrf_token %}
+
+          <hr />
+
+          {{ form.amount.label }}:<br>
+          {{ form.amount }}<br><br>
+          {{ form.name.label }}:<br>
+          {{ form.name }}
+          {{ form.token}}
+          {{ form.currency }}
+
+          <p class="total-amount">Total Amount: R{{ product_price }}</p>
+
+          <button id="payButton" type="submit" class="btn btn-pay mt-3">
+            <i class="bi bi-lock-fill me-2"></i> PAY NOW
+          </button>
+          
+          <div class="mt-3 p-3" style="background-color: #f8f9fa; border-radius: 6px; border-left: 4px solid var(--primary-green);">
+            <h6><i class="bi bi-shield-check me-2" style="color: var(--primary-green);"></i> SECURE PAYMENT</h6>
+            <small class="text-muted">Your payment is processed securely with 256-bit SSL encryption. We do not store your credit card details.</small>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <p class="mb-0">&copy; 2024 NDIO Telecoms. All rights reserved.</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <div class="mt-2">
+            <a href="#" class="text-white me-3">Terms</a>
+            <a href="#" class="text-white me-3">Privacy</a>
+            <a href="#" class="text-white">Contact</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    // Show loading animation when page is loading
+    document.addEventListener('DOMContentLoaded', function() {
+      const loadingOverlay = document.getElementById('loading-overlay');
+      
+      // Show loading animation immediately
+      loadingOverlay.classList.add('active');
+      
+      // Hide it when everything is loaded
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          loadingOverlay.classList.remove('active');
+        }, 1000); // 1 second delay to ensure everything is loaded
+      });
+    });
+
+    // capture page unload events
+    window.addEventListener('beforeunload', function() {
+      const loadingOverlay = document.getElementById('loading-overlay');
+      loadingOverlay.classList.add('active');
+    });
+
+    // Show loading when form is submitted
+    document.getElementById('paymentForm').addEventListener('submit', function() {
+      const loadingOverlay = document.getElementById('loading-overlay');
+      loadingOverlay.classList.add('active');
+    });
+  </script>
+</body>
+</html>

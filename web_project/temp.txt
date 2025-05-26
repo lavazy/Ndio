@@ -1,0 +1,370 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
+    <title>NDIO | Complete Your Payment </title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Yoco SDK -->
+    <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
+    
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #4caf50;
+            --dark-green: #1b5e20;
+            --primary-orange: #ff6d00;
+            --light-orange: #ff9100;
+            --dark-orange: #e65100;
+            --gradient-bg: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .payment-container {
+            max-width: 800px;
+            margin: 30px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+            flex: 1;
+        }
+        
+        .payment-header {
+            background: var(--gradient-bg);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .payment-header h2 {
+            font-weight: 700;
+            margin-bottom: 0;
+        }
+        
+        .payment-body {
+            background: white;
+            padding: 30px;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        .form-control {
+            padding: 12px 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 0.25rem rgba(46, 125, 50, 0.25);
+        }
+        
+        .btn-pay {
+            background-color: var(--primary-orange);
+            border-color: var(--primary-orange);
+            padding: 12px 25px;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.3s;
+            color: white;
+            width: 100%;
+        }
+        
+        .btn-pay:hover {
+            background-color: var(--dark-orange);
+            border-color: var(--dark-orange);
+            transform: translateY(-2px);
+            color: white;
+        }
+        
+        .product-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        
+        .product-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .total-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+        
+        .secure-payment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        .secure-payment i {
+            color: var(--primary-green);
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        /* Loading animation/overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .loading-image {
+            width: 150px;
+            height: auto;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite alternate;
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: var(--primary-green);
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-orange);
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-20px); }
+        }
+        
+        @media (max-width: 768px) {
+            .payment-container {
+                margin: 15px;
+            }
+            
+            .payment-body {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Animation -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-content">
+            <img src="{% static 'images/char1.png' %}" class="loading-image" alt="Loading...">
+            <div class="spinner"></div>
+            <strong><p class="loading-text">Processing Payment...</p></strong>
+        </div>
+    </div>
+
+    <div class="container my-5">
+        <div class="payment-container">
+            <div class="payment-header">
+                <h2><i class="bi bi-credit-card me-2"></i> COMPLETE YOUR PAYMENT</h2>
+                <p class="mb-0">Secure payment processed through Yoco</p>
+            </div>
+            
+            <div class="payment-body">
+                <div class="row">
+                    <!-- Payment Form -->
+                    <div class="col-lg-6">
+                        <form id="paymentForm" method="post" action="{% url 'process_payment' %}">
+                            {% csrf_token %}
+                            
+                            <div class="mb-4">
+                                <h5>Order Summary</h5>
+                                <div class="product-card">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <strong>{{ product_name }}</strong>
+                                        <a href="#" class="btn btn-sm btn-outline-primary">Change</a>
+                                    </div><br><hr>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Wifi Router Price:</span>
+                                        <strong>R300</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Wifi Price:</span>
+                                        <strong>R650</strong>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <h5 class="mb-0">Total Amount:</h5>
+                                    <span class="total-amount">R{{ amount }}</span>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            
+                            <h5 class="mb-3">Payment Details</h5>
+                            {{ form.name.label }}:<br>{{ form.name }}<br><br>
+                            {{ form.amount.label }}:<br>{{ form.amount }}
+                            
+                            <div class="secure-payment">
+                                <i class="bi bi-shield-lock"></i>
+                                <small>Your payment is secured with 256-bit SSL encryption</small>
+                            </div>
+                            
+                            <button id="payButton" type="submit" class="btn btn-pay mt-4">
+                                <i class="bi bi-lock me-2"></i> PAY NOW
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Payment Benefits -->
+                    <div class="col-lg-6 mt-4 mt-lg-0">
+
+                        <div class="p-4" style="background-color: #f8f9fa; border-radius: 8px; height: 100%;">
+
+                            <h4 style="color: var(--primary-green);"><i class="bi bi-shield-check me-2"></i> SECURE PAYMENT</h4>
+                            <p class="mt-3">We use Yoco, a trusted payment processor, to ensure your transaction is safe and secure.</p>
+
+                            <div class="mt-4">
+                                <div class="col md-4 text-center">
+                                    <img src="{% static 'images/char2.png' %}" alt="Visa" width="150" height="250">
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <h5><i class="bi bi-question-circle me-2"></i> NEED HELP?</h5>
+                                <p class="mt-2">If you encounter any issues with your payment, please contact our support team at <a href="mailto:support@ndio.co.za" style="color: var(--primary-orange);">support@ndio.co.za</a></p>
+                            </div>
+                            
+                            <div class="mt-4 p-3" style="background-color: white; border-radius: 6px; border-left: 4px solid var(--primary-orange);">
+                                <h6><i class="bi bi-clock-history me-2" style="color: var(--primary-orange);"></i> INSTANT ACTIVATION</h6>
+                                <small class="text-muted">Your service will be activated immediately after successful payment. You'll receive a confirmation email with all the details.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="{% static 'images/ndio_logo1.png' %}" width="160" height="70" alt="NDIO Logo" class="mb-3">
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">&copy; 2024 NDIO Telecoms. All rights reserved.</p>
+                    <div class="mt-2">
+                        <a href="#" class="text-white me-3">Terms</a>
+                        <a href="{% url 'privacy_policy' %}" class="text-white me-3">Privacy</a>
+                        <a href="#" class="text-white">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Show loading animation when page is loading
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            
+            // Show loading animation immediately
+            loadingOverlay.classList.add('active');
+            
+            // Hide it when everything is loaded
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    loadingOverlay.classList.remove('active');
+                }, 1000); // 1 second delay to ensure everything is loaded
+            });
+        });
+
+        // capture page unload events
+        window.addEventListener('beforeunload', function() {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            loadingOverlay.classList.add('active');
+        });
+
+        // Initialize Yoco SDK
+        const yoco = new window.YocoSDK({
+            publicKey: 'YOUR_YOCO_PUBLIC_KEY' // Replace with your Yoco public key
+        });
+
+        $(document).ready(function() {
+            // Handle form submission
+            $('#paymentForm').submit(function(e) {
+                e.preventDefault();
+                
+                // Show loading overlay
+                $('#loading-overlay').addClass('active');
+                
+                // Here you would typically process the payment with Yoco
+                // For demonstration, we'll simulate a payment processing delay
+                setTimeout(function() {
+                    // Submit the form after processing
+                    $('#paymentForm').off('submit').submit();
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>

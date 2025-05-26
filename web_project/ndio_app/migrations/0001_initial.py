@@ -15,27 +15,48 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='User_Detail',
+            name="User_Detail",
             fields=[
-                ('id_number', models.CharField(max_length=15, primary_key=True, serialize=False)),
-                ('phone_number', models.CharField(max_length=10)),
-                ('id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id_number",
+                    models.CharField(max_length=15, primary_key=True, serialize=False),
+                ),
+                ("phone_number", models.CharField(max_length=10)),
+                (
+                    "id",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Order',
+            name="Order",
             fields=[
-                ('order_id', models.AutoField(primary_key=True, serialize=False)),
-                ('address_type', models.CharField(max_length=30)),
-                ('apartment_name', models.CharField(blank=True, max_length=30, null=True)),
-                ('apartment_floor', models.IntegerField(blank=True, null=True)),
-                ('apartment_unit', models.IntegerField(blank=True, null=True)),
-                ('estate_name', models.CharField(blank=True, max_length=30, null=True)),
-                ('estate_address', models.CharField(blank=True, max_length=50, null=True)),
-                ('address', models.CharField(max_length=50)),
-                ('city', models.CharField(max_length=20)),
-                ('postal_code', models.IntegerField()),
-                ('id_number', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ndio_app.user_detail')),
+                ("order_id", models.AutoField(primary_key=True, serialize=False)),
+                ("address_type", models.CharField(max_length=30)),
+                (
+                    "apartment_name",
+                    models.CharField(blank=True, max_length=30, null=True),
+                ),
+                ("apartment_floor", models.IntegerField(blank=True, null=True)),
+                ("apartment_unit", models.IntegerField(blank=True, null=True)),
+                ("estate_name", models.CharField(blank=True, max_length=30, null=True)),
+                (
+                    "estate_address",
+                    models.CharField(blank=True, max_length=50, null=True),
+                ),
+                ("address", models.CharField(max_length=50)),
+                ("city", models.CharField(max_length=20)),
+                ("postal_code", models.IntegerField()),
+                (
+                    "id_number",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="ndio_app.user_detail",
+                    ),
+                ),
             ],
         ),
     ]
