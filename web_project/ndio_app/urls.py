@@ -3,7 +3,7 @@ from . import views
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path(" ", views.home, name="home"),
+    path("", views.home, name="home"),
     # Referral home page
     path("home_referral/<str:ref_code>/", views.referral_home, name="referral_home"),
     path("lte/", views.lte_view, name="lte_view"),
