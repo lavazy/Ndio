@@ -27,7 +27,7 @@ MEDIA_DIR = os.path.join(BASE_DIR, "media")
 SECRET_KEY = "django-insecure-=8ekfgd=kcgb7&cld+l%rh!i21-f*)12lhx=7*#_^(-d08_5!n"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['ndio.co.za', 'www.ndio.co.za', '139.177.207.65', 'localhost', '127.0.0.1']
 
