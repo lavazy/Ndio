@@ -145,7 +145,7 @@ def get_network_provider_products(address):
             )
             response = response.json()
             for products in response["arrNetworkProviderProducts"]:
-                print(products)
+                print("Products Received Successfully!!")
                 products_list.append(products)
         return products_list
     else:
@@ -236,7 +236,7 @@ def referral_home(request, ref_code=None):
             - 'address': User-submitted address.
     """
     # Use ref_code from URL if provided
-    print(request.session.items())
+    # print(request.session.items())
     request.session.flush()
     if ref_code:
         try:
